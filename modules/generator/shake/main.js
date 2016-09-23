@@ -20,13 +20,11 @@ module.exports = (server, data) => {
         return
     }
 
-    let scale = Number(data.b)
     let location = data.l
     let epicenter = Number(data.e)
     let magnitude = Number(data.m)
     let seismic = data.s
     let depth = Number(data.d)
-    let prelim = Boolean(data.p)
 
     if (!(location && epicenter && magnitude && seismic && depth)) {
         res.send({ ok: false, error: "missing params" })
@@ -37,7 +35,7 @@ module.exports = (server, data) => {
         size: "386x159",
         center: location.join(","),
         format: "png",
-        scale: scale ? scale : 1,
+        scale: 1,
         zoom: 6,
         style: [
             "feature:road|element:all|visibility:off",
