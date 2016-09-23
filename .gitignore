@@ -1,0 +1,4 @@
+node_modules
+*.log
+keychain.json
+database.json

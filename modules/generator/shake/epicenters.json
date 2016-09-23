@@ -1,0 +1,1374 @@
+{
+    "011": {
+        "ja": "北海道地方",
+        "en": "Hokkaido Region"
+    },
+    "012": {
+        "ja": "東北地方",
+        "en": "Tohoku Region"
+    },
+    "013": {
+        "ja": "北陸地方",
+        "en": "Hokuriku Region"
+    },
+    "014": {
+        "ja": "関東甲信地方",
+        "en": "Kanto Koshin Region"
+    },
+    "015": {
+        "ja": "小笠原地方",
+        "en": "Ogasawara Region"
+    },
+    "016": {
+        "ja": "東海地方",
+        "en": "Tokai Region"
+    },
+    "017": {
+        "ja": "近畿地方",
+        "en": "Kinki Region"
+    },
+    "018": {
+        "ja": "中国地方",
+        "en": "Chugoku Region"
+    },
+    "019": {
+        "ja": "四国地方",
+        "en": "Shikoku Region"
+    },
+    "020": {
+        "ja": "九州地方",
+        "en": "Kyushu Region"
+    },
+    "021": {
+        "ja": "沖縄地方",
+        "en": "Okinawa Region"
+    },
+    "100": {
+        "ja": "石狩地方北部",
+        "en": "Northern Ishikari, Hokkaido"
+    },
+    "101": {
+        "ja": "石狩地方中部",
+        "en": "Central Ishikari, Hokkaido"
+    },
+    "102": {
+        "ja": "石狩地方南部",
+        "en": "Southern Ishikari, Hokkaido"
+    },
+    "105": {
+        "ja": "渡島地方北部",
+        "en": "Northern Oshima, Hokkaido"
+    },
+    "106": {
+        "ja": "渡島地方東部",
+        "en": "Eastern Oshima, Hokkaido"
+    },
+    "107": {
+        "ja": "渡島地方西部",
+        "en": "Western Oshima, Hokkaido"
+    },
+    "110": {
+        "ja": "檜山地方",
+        "en": "Hiyama, Hokkaido"
+    },
+    "115": {
+        "ja": "後志地方北部",
+        "en": "Northern Shiribeshi, Hokkaido"
+    },
+    "116": {
+        "ja": "後志地方東部",
+        "en": "Eastern Shiribeshi, Hokkaido"
+    },
+    "117": {
+        "ja": "後志地方西部",
+        "en": "Western Shiribeshi, Hokkaido"
+    },
+    "120": {
+        "ja": "空知地方北部",
+        "en": "Northern Sorachi, Hokkaido"
+    },
+    "121": {
+        "ja": "空知地方中部",
+        "en": "Central Sorachi, Hokkaido"
+    },
+    "122": {
+        "ja": "空知地方南部",
+        "en": "Southern Sorachi, Hokkaido"
+    },
+    "125": {
+        "ja": "上川地方北部",
+        "en": "Northern Kamikawa, Hokkaido"
+    },
+    "126": {
+        "ja": "上川地方中部",
+        "en": "Central Kamikawa, Hokkaido"
+    },
+    "127": {
+        "ja": "上川地方南部",
+        "en": "Southern Kamikawa, Hokkaido"
+    },
+    "130": {
+        "ja": "留萌地方中北部",
+        "en": "Mid-Northern Rumoi, Hokkaido"
+    },
+    "131": {
+        "ja": "留萌地方南部",
+        "en": "Southern Rumoi, Hokkaido"
+    },
+    "135": {
+        "ja": "宗谷地方北部",
+        "en": "Northern Soya, Hokkaido"
+    },
+    "136": {
+        "ja": "宗谷地方南部",
+        "en": "Southern Soya, Hokkaido"
+    },
+    "140": {
+        "ja": "網走地方",
+        "en": "Abashiri, Hokkaido"
+    },
+    "141": {
+        "ja": "北見地方",
+        "en": "Kitami, Hokkaido"
+    },
+    "142": {
+        "ja": "紋別地方",
+        "en": "Monbetsu, Hokkaido"
+    },
+    "145": {
+        "ja": "胆振地方西部",
+        "en": "Western Iburi, Hokkaido"
+    },
+    "146": {
+        "ja": "胆振地方中東部",
+        "en": "Mid-Eastern Iburi, Hokkaido"
+    },
+    "150": {
+        "ja": "日高地方西部",
+        "en": "Western Hidaka, Hokkaido"
+    },
+    "151": {
+        "ja": "日高地方中部",
+        "en": "Central Hidaka, Hokkaido"
+    },
+    "152": {
+        "ja": "日高地方東部",
+        "en": "Eastern Hidaka, Hokkaido"
+    },
+    "155": {
+        "ja": "十勝地方北部",
+        "en": "Northern Tokachi, Hokkaido"
+    },
+    "156": {
+        "ja": "十勝地方中部",
+        "en": "Central Tokachi, Hokkaido"
+    },
+    "157": {
+        "ja": "十勝地方南部",
+        "en": "Northern Tokachi, Hokkaido"
+    },
+    "160": {
+        "ja": "釧路地方北部",
+        "en": "Northern Kushiro, Hokkaido"
+    },
+    "161": {
+        "ja": "釧路地方中南部",
+        "en": "Mid-Southern Kushiro, Hokkaido"
+    },
+    "165": {
+        "ja": "根室地方北部",
+        "en": "Northern Nemuro, Hokkaido"
+    },
+    "166": {
+        "ja": "根室地方中部",
+        "en": "Central Nemuro, Hokkaido"
+    },
+    "167": {
+        "ja": "根室地方南部",
+        "en": "Southern Nemuro, Hokkaido"
+    },
+    "180": {
+        "ja": "北海道南西沖",
+        "en": "Offshore South Western Hokkaido"
+    },
+    "181": {
+        "ja": "北海道西方沖",
+        "en": "Offshore Western Hokkaido"
+    },
+    "182": {
+        "ja": "石狩湾",
+        "en": "Ishikari Bay"
+    },
+    "183": {
+        "ja": "北海道北西沖",
+        "en": "Offshore North Western Hokkaido"
+    },
+    "184": {
+        "ja": "宗谷海峡",
+        "en": "Soya Strait"
+    },
+    "186": {
+        "ja": "国後島付近",
+        "en": "Near Kunashir Island"
+    },
+    "187": {
+        "ja": "択捉島付近",
+        "en": "Near Etorofu Island"
+    },
+    "188": {
+        "ja": "北海道東方沖",
+        "en": "Offshore Eastern Hokkaido"
+    },
+    "189": {
+        "ja": "根室半島南東沖",
+        "en": "Offshore South Eastern Nemuro Peninsula"
+    },
+    "190": {
+        "ja": "釧路沖",
+        "en": "Offshore Kushiro, Hokkaido"
+    },
+    "191": {
+        "ja": "十勝沖",
+        "en": "Offshore Tokachi, Hokkaido"
+    },
+    "192": {
+        "ja": "浦河沖",
+        "en": "Offshore Urakawa, Hokkaido"
+    },
+    "193": {
+        "ja": "苫小牧沖",
+        "en": "Offshore Tomakomai, Hokkaido"
+    },
+    "194": {
+        "ja": "内浦湾",
+        "en": "Uchiura Bay"
+    },
+    "195": {
+        "ja": "宗谷東方沖",
+        "en": "Offshore Eastern Soya, Hokkaido"
+    },
+    "196": {
+        "ja": "網走沖",
+        "en": "Offshore Abashiri, Hokkaido"
+    },
+    "197": {
+        "ja": "択捉島南東沖",
+        "en": "Offshore South Western Etorofu"
+    },
+    "200": {
+        "ja": "青森県津軽北部",
+        "en": "Northern Tsugaru, Aomori Prefecture"
+    },
+    "201": {
+        "ja": "青森県津軽南部",
+        "en": "Southern Tsugaru, Aomori Prefecture"
+    },
+    "202": {
+        "ja": "青森県三八上北地方",
+        "en": "Sanpachikamikita, Aomori Prefecture"
+    },
+    "203": {
+        "ja": "青森県下北地方",
+        "en": "Shimokita, Aomori Prefecture"
+    },
+    "210": {
+        "ja": "岩手県沿岸北部",
+        "en": "Northern Coastal Iwate Prefecture"
+    },
+    "211": {
+        "ja": "岩手県沿岸南部",
+        "en": "Southern Coastal Iwate Prefecture"
+    },
+    "212": {
+        "ja": "岩手県内陸北部",
+        "en": "Northern Coastal Iwate Prefecture"
+    },
+    "213": {
+        "ja": "岩手県内陸南部",
+        "en": "Southern Coastal Iwate Prefecture"
+    },
+    "220": {
+        "ja": "宮城県北部",
+        "en": "Northern Miyagi Prefecture"
+    },
+    "221": {
+        "ja": "宮城県南部",
+        "en": "Southern Miyagi Prefecture"
+    },
+    "222": {
+        "ja": "宮城県中部",
+        "en": "Central Miyagi Prefecture"
+    },
+    "230": {
+        "ja": "秋田県沿岸北部",
+        "en": "Northern Coastal Akita Prefecture"
+    },
+    "231": {
+        "ja": "秋田県沿岸南部",
+        "en": "Southern Coastal Akita Prefecture"
+    },
+    "232": {
+        "ja": "秋田県内陸北部",
+        "en": "Northern Inland Akita Prefecture"
+    },
+    "233": {
+        "ja": "秋田県内陸南部",
+        "en": "Southern Inland Akita Prefecture"
+    },
+    "240": {
+        "ja": "山形県庄内地方",
+        "en": "Shonai, Yamagata Prefecture"
+    },
+    "241": {
+        "ja": "山形県最上地方",
+        "en": "Mogami, Yamagata Prefecture"
+    },
+    "242": {
+        "ja": "山形県村山地方",
+        "en": "Murayama, Yamagata Prefecture"
+    },
+    "243": {
+        "ja": "山形県置賜地方",
+        "en": "Okitama, Yamagata Prefecture"
+    },
+    "250": {
+        "ja": "福島県中通り",
+        "en": "Nakadori, Fukushima Prefecture"
+    },
+    "251": {
+        "ja": "福島県浜通り",
+        "en": "Hamadori, Fukushima Prefecture"
+    },
+    "252": {
+        "ja": "福島県会津",
+        "en": "Aizu, Fukushima Prefecture"
+    },
+    "280": {
+        "ja": "津軽海峡",
+        "en": "Tsugaru Strait"
+    },
+    "281": {
+        "ja": "山形県沖",
+        "en": "Offshore Yamagata Prefecture"
+    },
+    "282": {
+        "ja": "秋田県沖",
+        "en": "Offshore Akita Prefecture"
+    },
+    "283": {
+        "ja": "青森県西方沖",
+        "en": "Offshore Western Aomori Prefecture"
+    },
+    "284": {
+        "ja": "陸奥湾",
+        "en": "Mutsu Bay"
+    },
+    "285": {
+        "ja": "青森県東方沖",
+        "en": "Offshore Eastern Aomori Prefecture"
+    },
+    "286": {
+        "ja": "岩手県沖",
+        "en": "Offshore Iwate Prefecture"
+    },
+    "287": {
+        "ja": "宮城県沖",
+        "en": "Offshore Miyagi Prefecture"
+    },
+    "288": {
+        "ja": "三陸沖",
+        "en": "Offshore Sanriku"
+    },
+    "289": {
+        "ja": "福島県沖",
+        "en": "Offshore Fukushima Prefecture"
+    },
+    "300": {
+        "ja": "茨城県北部",
+        "en": "Northern Ibaraki Prefecture"
+    },
+    "301": {
+        "ja": "茨城県南部",
+        "en": "Southern Ibaraki Prefecture"
+    },
+    "309": {
+        "ja": "千葉県南東沖",
+        "en": "Offshore South Eastern Chiba Prefecture"
+    },
+    "310": {
+        "ja": "栃木県北部",
+        "en": "Northern Tochigi Prefecture"
+    },
+    "311": {
+        "ja": "栃木県南部",
+        "en": "Southern Tochigi Prefecture"
+    },
+    "320": {
+        "ja": "群馬県北部",
+        "en": "Northern Gunma Prefecture"
+    },
+    "321": {
+        "ja": "群馬県南部",
+        "en": "Southern Gunma Prefecture"
+    },
+    "330": {
+        "ja": "埼玉県北部",
+        "en": "Northern Saitama Prefecture"
+    },
+    "331": {
+        "ja": "埼玉県南部",
+        "en": "Southern Saitama Prefecture"
+    },
+    "332": {
+        "ja": "埼玉県秩父地方",
+        "en": "Chichibu, Saitama Prefecture"
+    },
+    "340": {
+        "ja": "千葉県北東部",
+        "en": "North Eastern Chiba Prefecture"
+    },
+    "341": {
+        "ja": "千葉県北西部",
+        "en": "North Western Chiba Prefecture"
+    },
+    "342": {
+        "ja": "千葉県南部",
+        "en": "Southern Chiba Prefecture"
+    },
+    "349": {
+        "ja": "房総半島南方沖",
+        "en": "Offshore Southern Boso Peninsula"
+    },
+    "350": {
+        "ja": "東京都２３区",
+        "en": "Tokyo Metropolitan Area"
+    },
+    "351": {
+        "ja": "東京都多摩東部",
+        "en": "Eastern Tama, Tokyo"
+    },
+    "352": {
+        "ja": "東京都多摩西部",
+        "en": "Western Tama, Tokyo"
+    },
+    "360": {
+        "ja": "神奈川県東部",
+        "en": "Eastern Kanagawa Prefecture"
+    },
+    "361": {
+        "ja": "神奈川県西部",
+        "en": "Western Kanagawa Prefecture"
+    },
+    "370": {
+        "ja": "新潟県上越地方",
+        "en": "Joetsu, Niigata Prefecture"
+    },
+    "371": {
+        "ja": "新潟県中越地方",
+        "en": "Chuetsu, Niigata Prefecture"
+    },
+    "372": {
+        "ja": "新潟県下越地方",
+        "en": "Kaetsu, Niigata Prefecture"
+    },
+    "378": {
+        "ja": "新潟県下越沖",
+        "en": "Offshore Kaetsu, Niigata Prefecture"
+    },
+    "379": {
+        "ja": "新潟県上中越沖",
+        "en": "Offshore Chuetsu, Niigata Prefecture"
+    },
+    "380": {
+        "ja": "富山県東部",
+        "en": "Eastern Toyama Prefecture"
+    },
+    "381": {
+        "ja": "富山県西部",
+        "en": "Western Toyama Prefecture"
+    },
+    "390": {
+        "ja": "石川県能登地方",
+        "en": "Noto, Ishikawa Prefecture"
+    },
+    "391": {
+        "ja": "石川県加賀地方",
+        "en": "Kaga, Ishikawa Prefecture"
+    },
+    "400": {
+        "ja": "福井県嶺北",
+        "en": "Reihoku, Fukui Prefecture"
+    },
+    "401": {
+        "ja": "福井県嶺南",
+        "en": "Reinan, Fukui Prefecture"
+    },
+    "411": {
+        "ja": "山梨県中・西部",
+        "en": "Mid Western Yamanashi Prefecture"
+    },
+    "412": {
+        "ja": "山梨県東部・富士五湖",
+        "en": "Fuji Five Lakes, Yamanashi Prefecture"
+    },
+    "420": {
+        "ja": "長野県北部",
+        "en": "Northern Nagano Prefecture"
+    },
+    "421": {
+        "ja": "長野県中部",
+        "en": "Central Nagano Prefecture"
+    },
+    "422": {
+        "ja": "長野県南部",
+        "en": "Southern Nagano Prefecture"
+    },
+    "430": {
+        "ja": "岐阜県飛騨地方",
+        "en": "Hida, Gifu Prefecture"
+    },
+    "431": {
+        "ja": "岐阜県美濃東部",
+        "en": "Eastern Mino, Gifu Prefecture"
+    },
+    "432": {
+        "ja": "岐阜県美濃中西部",
+        "en": "Mid Western Mino, Gifu Prefecture"
+    },
+    "440": {
+        "ja": "静岡県伊豆地方",
+        "en": "Izu, Shizuoka Prefecture"
+    },
+    "441": {
+        "ja": "静岡県東部",
+        "en": "Eastern Shizuoka Prefecture"
+    },
+    "442": {
+        "ja": "静岡県中部",
+        "en": "Central Shizuoka Prefecture"
+    },
+    "443": {
+        "ja": "静岡県西部",
+        "en": "Western Shizuoka Prefecture"
+    },
+    "450": {
+        "ja": "愛知県東部",
+        "en": "Eastern Aichi Prefecture"
+    },
+    "451": {
+        "ja": "愛知県西部",
+        "en": "Western Aichi Prefecture"
+    },
+    "460": {
+        "ja": "三重県北部",
+        "en": "Northern Mie Prefecture"
+    },
+    "461": {
+        "ja": "三重県中部",
+        "en": "Central Mie Prefecture"
+    },
+    "462": {
+        "ja": "三重県南部",
+        "en": "Southern Mie Prefecture"
+    },
+    "469": {
+        "ja": "三重県南東沖",
+        "en": "Offshore South Eastern Mie Prefecture"
+    },
+    "471": {
+        "ja": "茨城県沖",
+        "en": "Offshore Ibaraki Prefecture"
+    },
+    "472": {
+        "ja": "関東東方沖",
+        "en": "Offshore Eastern Kanto"
+    },
+    "473": {
+        "ja": "千葉県東方沖",
+        "en": "Offshore Eastern Chiba Prefecture"
+    },
+    "475": {
+        "ja": "八丈島東方沖",
+        "en": "Offshore Eastern Hachijo Island"
+    },
+    "476": {
+        "ja": "八丈島近海",
+        "en": "Hachijo Island Waters"
+    },
+    "477": {
+        "ja": "東京湾",
+        "en": "Tokyo Bay"
+    },
+    "478": {
+        "ja": "相模湾",
+        "en": "Sagami Bay"
+    },
+    "480": {
+        "ja": "伊豆大島近海",
+        "en": "Izu Oshima Waters"
+    },
+    "481": {
+        "ja": "伊豆半島東方沖",
+        "en": "Offshore Eastern Izu Peninsula"
+    },
+    "482": {
+        "ja": "三宅島近海",
+        "en": "Miyake Island Waters"
+    },
+    "483": {
+        "ja": "新島・神津島近海",
+        "en": "Niijima Kozushima Waters"
+    },
+    "485": {
+        "ja": "駿河湾",
+        "en": "Suruga Bay"
+    },
+    "486": {
+        "ja": "駿河湾南方沖",
+        "en": "Offshore Southern Suruga Bay"
+    },
+    "487": {
+        "ja": "遠州灘",
+        "en": "Enshu Sea"
+    },
+    "489": {
+        "ja": "三河湾",
+        "en": "Mikawa Bay"
+    },
+    "490": {
+        "ja": "伊勢湾",
+        "en": "Ise Bay"
+    },
+    "492": {
+        "ja": "若狭湾",
+        "en": "Wakasa Bay"
+    },
+    "493": {
+        "ja": "福井県沖",
+        "en": "Offshore Fukui Prefecture"
+    },
+    "494": {
+        "ja": "石川県西方沖",
+        "en": "Offshore Western Ishikawa Prefecture"
+    },
+    "495": {
+        "ja": "能登半島沖",
+        "en": "Offshore Noto Peninsula"
+    },
+    "497": {
+        "ja": "富山湾",
+        "en": "Toyama Bay"
+    },
+    "498": {
+        "ja": "佐渡付近",
+        "en": "Near Sado"
+    },
+    "499": {
+        "ja": "東海道南方沖",
+        "en": "Offshore Southern Tokaido"
+    },
+    "500": {
+        "ja": "滋賀県北部",
+        "en": "Northern Shiga Prefecture"
+    },
+    "501": {
+        "ja": "滋賀県南部",
+        "en": "Southern Shiga Prefecture"
+    },
+    "510": {
+        "ja": "京都府北部",
+        "en": "Northern Kyoto Prefecture"
+    },
+    "511": {
+        "ja": "京都府南部",
+        "en": "Southern Kyoto Prefecture"
+    },
+    "520": {
+        "ja": "大阪府北部",
+        "en": "Northern Osaka Prefecture"
+    },
+    "521": {
+        "ja": "大阪府南部",
+        "en": "Southern Osaka Prefecture"
+    },
+    "530": {
+        "ja": "兵庫県北部",
+        "en": "Northern Hyogo Prefecture"
+    },
+    "531": {
+        "ja": "兵庫県南東部",
+        "en": "South Eastern Hyogo Prefecture"
+    },
+    "532": {
+        "ja": "兵庫県南西部",
+        "en": "South Western Hyogo Prefecture"
+    },
+    "540": {
+        "ja": "奈良県",
+        "en": "Nara Prefecture"
+    },
+    "550": {
+        "ja": "和歌山県北部",
+        "en": "Northern Wakayama Prefecture"
+    },
+    "551": {
+        "ja": "和歌山県南部",
+        "en": "Southern Wakayama Prefecture"
+    },
+    "560": {
+        "ja": "鳥取県東部",
+        "en": "Eastern Tottori Prefecture"
+    },
+    "562": {
+        "ja": "鳥取県中部",
+        "en": "Central Tottori Prefecture"
+    },
+    "563": {
+        "ja": "鳥取県西部",
+        "en": "Western Tottori Prefecture"
+    },
+    "570": {
+        "ja": "島根県東部",
+        "en": "Eastern Shimane Prefecture"
+    },
+    "571": {
+        "ja": "島根県西部",
+        "en": "Western Shimane Prefecture"
+    },
+    "580": {
+        "ja": "岡山県北部",
+        "en": "Northern Okayama Prefecture"
+    },
+    "581": {
+        "ja": "岡山県南部",
+        "en": "Southern Okayama Prefecture"
+    },
+    "590": {
+        "ja": "広島県北部",
+        "en": "Northern Hiroshima Prefecture"
+    },
+    "591": {
+        "ja": "広島県南東部",
+        "en": "South Eastern Hiroshima Prefecture"
+    },
+    "592": {
+        "ja": "広島県南西部",
+        "en": "South Western Hiroshima Prefecture"
+    },
+    "600": {
+        "ja": "徳島県北部",
+        "en": "Northern Tokushima Prefecture"
+    },
+    "601": {
+        "ja": "徳島県南部",
+        "en": "Southern Tokushima Prefecture"
+    },
+    "610": {
+        "ja": "香川県東部",
+        "en": "Eastern Kagawa Prefecture"
+    },
+    "611": {
+        "ja": "香川県西部",
+        "en": "Western Kagawa Prefecture"
+    },
+    "620": {
+        "ja": "愛媛県東予",
+        "en": "Northern Ehime Prefecture"
+    },
+    "621": {
+        "ja": "愛媛県中予",
+        "en": "Central Ehime Prefecture"
+    },
+    "622": {
+        "ja": "愛媛県南予",
+        "en": "Southern Ehime Prefecture"
+    },
+    "630": {
+        "ja": "高知県東部",
+        "en": "Eastern Kochi Prefecture"
+    },
+    "631": {
+        "ja": "高知県中部",
+        "en": "Central Kochi Prefecture"
+    },
+    "632": {
+        "ja": "高知県西部",
+        "en": "Western Kochi Prefecture"
+    },
+    "673": {
+        "ja": "土佐湾",
+        "en": "Tosa Bay"
+    },
+    "674": {
+        "ja": "紀伊水道",
+        "en": "Kii Channel"
+    },
+    "675": {
+        "ja": "大阪湾",
+        "en": "Osaka Bay"
+    },
+    "676": {
+        "ja": "播磨灘",
+        "en": "Harimanada Sea"
+    },
+    "677": {
+        "ja": "瀬戸内海中部",
+        "en": "Central Seto Inland Sea"
+    },
+    "678": {
+        "ja": "安芸灘",
+        "en": "Akinada Sea"
+    },
+    "679": {
+        "ja": "周防灘",
+        "en": "Suo Sea"
+    },
+    "680": {
+        "ja": "伊予灘",
+        "en": "Iyonada Sea"
+    },
+    "681": {
+        "ja": "豊後水道",
+        "en": "Bungo Channel"
+    },
+    "682": {
+        "ja": "山口県北西沖",
+        "en": "Offshore North Western Yamaguchi Prefecture"
+    },
+    "683": {
+        "ja": "島根県沖",
+        "en": "Offshore Shimane Prefecture"
+    },
+    "684": {
+        "ja": "鳥取県沖",
+        "en": "Offshore Tottori Prefecture"
+    },
+    "685": {
+        "ja": "隠岐島近海",
+        "en": "Oki Island Waters"
+    },
+    "686": {
+        "ja": "兵庫県北方沖",
+        "en": "Offshore Northern Hyogo Prefecture"
+    },
+    "687": {
+        "ja": "京都府沖",
+        "en": "Offshore Kyoto Prefecture"
+    },
+    "688": {
+        "ja": "淡路島付近",
+        "en": "Near Awaji Island"
+    },
+    "689": {
+        "ja": "和歌山県南方沖",
+        "en": "Offshore Southern Wakayama Prefecture"
+    },
+    "700": {
+        "ja": "山口県北部",
+        "en": "Northern Yamaguchi Prefecture"
+    },
+    "702": {
+        "ja": "山口県西部",
+        "en": "Western Yamaguchi Prefecture"
+    },
+    "703": {
+        "ja": "山口県東部",
+        "en": "Eastern Yamaguchi Prefecture"
+    },
+    "704": {
+        "ja": "山口県中部",
+        "en": "Central Yamaguchi Prefecture"
+    },
+    "710": {
+        "ja": "福岡県福岡地方",
+        "en": "Fukuoka, Fukuoka Prefecture"
+    },
+    "711": {
+        "ja": "福岡県北九州地方",
+        "en": "Kitakyushu, Fukuoka Prefecture"
+    },
+    "712": {
+        "ja": "福岡県筑豊地方",
+        "en": "Chikuho, Fukuoka Prefecture"
+    },
+    "713": {
+        "ja": "福岡県筑後地方",
+        "en": "Chikugo, Fukuoka Prefecture"
+    },
+    "720": {
+        "ja": "佐賀県北部",
+        "en": "Northern Saga Prefecture"
+    },
+    "721": {
+        "ja": "佐賀県南部",
+        "en": "Southern Saga Prefecture"
+    },
+    "730": {
+        "ja": "長崎県北部",
+        "en": "Northern Nagasaki Prefecture"
+    },
+    "731": {
+        "ja": "長崎県南西部",
+        "en": "South Western Nagasaki Prefecture"
+    },
+    "732": {
+        "ja": "長崎県島原半島",
+        "en": "Shimabara Peninsula, Nagasaki"
+    },
+    "740": {
+        "ja": "熊本県阿蘇地方",
+        "en": "Aso, Kumamoto Prefecture"
+    },
+    "741": {
+        "ja": "熊本県熊本地方",
+        "en": "Kumamoto, Kumamoto Prefecture"
+    },
+    "742": {
+        "ja": "熊本県球磨地方",
+        "en": "Kuma, Kumamoto Prefecture"
+    },
+    "743": {
+        "ja": "熊本県天草・芦北地方",
+        "en": "Amakusa Ashikita, Kumamoto Prefecture"
+    },
+    "750": {
+        "ja": "大分県北部",
+        "en": "Northern Oita Prefecture"
+    },
+    "751": {
+        "ja": "大分県中部",
+        "en": "Central Oita Prefecture"
+    },
+    "752": {
+        "ja": "大分県南部",
+        "en": "Southern Oita Prefecture"
+    },
+    "753": {
+        "ja": "大分県西部",
+        "en": "Western Oita Prefecture"
+    },
+    "760": {
+        "ja": "宮崎県北部平野部",
+        "en": "Northern Plains, Miyazaki Prefecture"
+    },
+    "761": {
+        "ja": "宮崎県北部山沿い",
+        "en": "Northern Mountain, Miyazaki Prefecture"
+    },
+    "762": {
+        "ja": "宮崎県南部平野部",
+        "en": "Southern Plains, Miyazaki Prefecture"
+    },
+    "763": {
+        "ja": "宮崎県南部山沿い",
+        "en": "Southern Mountain, Miyazaki Prefecture"
+    },
+    "770": {
+        "ja": "鹿児島県薩摩地方",
+        "en": "Satsuma, Kagoshima Prefecture"
+    },
+    "771": {
+        "ja": "鹿児島県大隅地方",
+        "en": "Osumi, Kagoshima Prefecture"
+    },
+    "783": {
+        "ja": "五島列島近海",
+        "en": "Goto Islands Waters"
+    },
+    "784": {
+        "ja": "天草灘",
+        "en": "Amakusanada Sea"
+    },
+    "785": {
+        "ja": "有明海",
+        "en": "Ariake Sea"
+    },
+    "786": {
+        "ja": "橘湾",
+        "en": "Tachibana Bay"
+    },
+    "787": {
+        "ja": "鹿児島湾",
+        "en": "Kagoshima Bay"
+    },
+    "790": {
+        "ja": "種子島近海",
+        "en": "Tanegashima Waters"
+    },
+    "791": {
+        "ja": "日向灘",
+        "en": "Hyuga Sea"
+    },
+    "793": {
+        "ja": "奄美大島近海",
+        "en": "Amami Oshima Waters"
+    },
+    "795": {
+        "ja": "壱岐・対馬近海",
+        "en": "Iki-Tsushima Waters"
+    },
+    "796": {
+        "ja": "福岡県北西沖",
+        "en": "Offshore North Western Fukuoka Prefecture"
+    },
+    "797": {
+        "ja": "薩摩半島西方沖",
+        "en": "Offshore Western Satsuma Peninsula"
+    },
+    "798": {
+        "ja": "トカラ列島近海",
+        "en": "Tokara Island Waters"
+    },
+    "799": {
+        "ja": "奄美大島北西沖",
+        "en": "Offshore North Western Amami Oshima Waters"
+    },
+    "820": {
+        "ja": "大隅半島東方沖",
+        "en": "Offshore Eastern Osumi Peninsula"
+    },
+    "821": {
+        "ja": "九州地方南東沖",
+        "en": "Offshore South Eastern Kyushu"
+    },
+    "822": {
+        "ja": "種子島南東沖",
+        "en": "Offshore South Eastern Tanegashima"
+    },
+    "823": {
+        "ja": "奄美大島北東沖",
+        "en": "Offshore North Eastern Amami Oshima"
+    },
+    "850": {
+        "ja": "沖縄本島近海",
+        "en": "Offshore Okinawa"
+    },
+    "851": {
+        "ja": "南大東島近海",
+        "en": "Minami Daito Island Waters"
+    },
+    "852": {
+        "ja": "沖縄本島南方沖",
+        "en": "Offshore Southern Okinawa"
+    },
+    "853": {
+        "ja": "宮古島近海",
+        "en": "Miyakojima Waters"
+    },
+    "854": {
+        "ja": "石垣島近海",
+        "en": "Ishigaki Waters"
+    },
+    "855": {
+        "ja": "石垣島南方沖",
+        "en": "Offshore Southern Ishigaki"
+    },
+    "856": {
+        "ja": "西表島付近",
+        "en": "Near Iriomote Island"
+    },
+    "857": {
+        "ja": "与那国島近海",
+        "en": "Yonaguni Island Waters"
+    },
+    "858": {
+        "ja": "沖縄本島北西沖",
+        "en": "Offshore North Western Okinawa"
+    },
+    "859": {
+        "ja": "宮古島北西沖",
+        "en": "Offshore North Western Miyakojima"
+    },
+    "860": {
+        "ja": "石垣島北西沖",
+        "en": "Offshore North Western Ishigaki"
+    },
+    "900": {
+        "ja": "台湾付近",
+        "en": "Near Taiwan"
+    },
+    "901": {
+        "ja": "東シナ海",
+        "en": "East China Sea"
+    },
+    "902": {
+        "ja": "四国沖",
+        "en": "Offshore Shikoku"
+    },
+    "903": {
+        "ja": "鳥島近海",
+        "en": "Torishima Waters"
+    },
+    "904": {
+        "ja": "鳥島東方沖",
+        "en": "Offshore Eastern Torishima"
+    },
+    "905": {
+        "ja": "オホーツク海南部",
+        "en": "South Okhotsk Sea"
+    },
+    "906": {
+        "ja": "サハリン西方沖",
+        "en": "Offshore Western Sakhalin"
+    },
+    "907": {
+        "ja": "日本海北部",
+        "en": "Northern Sea of Japan"
+    },
+    "908": {
+        "ja": "日本海中部",
+        "en": "Central Sea of Japan"
+    },
+    "909": {
+        "ja": "日本海西部",
+        "en": "Western Sea of Japan"
+    },
+    "911": {
+        "ja": "父島近海",
+        "en": "Chichijima Waters"
+    },
+    "912": {
+        "ja": "千島列島",
+        "en": "Kuril Islands"
+    },
+    "913": {
+        "ja": "千島列島南東沖",
+        "en": "Offshore South Eastern Kuril Islands"
+    },
+    "914": {
+        "ja": "北海道南東沖",
+        "en": "Offshore South Eastern Hokkaido Prefecture"
+    },
+    "915": {
+        "ja": "東北地方東方沖",
+        "en": "Offshore Eastern Tohoku"
+    },
+    "916": {
+        "ja": "小笠原諸島西方沖",
+        "en": "Offshore Western Ogasawara Islands"
+    },
+    "917": {
+        "ja": "硫黄島近海",
+        "en": "Iwo Jima waters"
+    },
+    "918": {
+        "ja": "小笠原諸島東方沖",
+        "en": "Offshore Eastern Ogasawara Islands"
+    },
+    "919": {
+        "ja": "南海道南方沖",
+        "en": "Offshore Southern Nankaido"
+    },
+    "920": {
+        "ja": "薩南諸島東方沖",
+        "en": "Offshore Eastern Satsunan Islands"
+    },
+    "921": {
+        "ja": "本州南方沖",
+        "en": "Offshore Southern Honshu"
+    },
+    "922": {
+        "ja": "サハリン南部付近",
+        "en": "Near Southern Sakhalin"
+    },
+    "930": {
+        "ja": "北西太平洋",
+        "en": "North Western Pacific Ocean"
+    },
+    "932": {
+        "ja": "マリアナ諸島",
+        "en": "Mariana Islands"
+    },
+    "933": {
+        "ja": "黄海",
+        "en": "Yellow Sea"
+    },
+    "934": {
+        "ja": "朝鮮半島南部",
+        "en": "South Korean Peninsula"
+    },
+    "935": {
+        "ja": "朝鮮半島北部",
+        "en": "North Korean Peninsula"
+    },
+    "936": {
+        "ja": "中国東北部",
+        "en": "North Eastern China"
+    },
+    "937": {
+        "ja": "ウラジオストク付近",
+        "en": "Near Vladivostok"
+    },
+    "938": {
+        "ja": "シベリア南部",
+        "en": "Southern Siberia"
+    },
+    "939": {
+        "ja": "サハリン近海",
+        "en": "Offshore Sakhalin"
+    },
+    "940": {
+        "ja": "アリューシャン列島",
+        "en": "Aleutian Islands"
+    },
+    "941": {
+        "ja": "カムチャツカ半島付近",
+        "en": "Near the Kamchatka Peninsula"
+    },
+    "942": {
+        "ja": "北米西部",
+        "en": "Western North America"
+    },
+    "943": {
+        "ja": "北米中部",
+        "en": "Central North America"
+    },
+    "944": {
+        "ja": "北米東部",
+        "en": "Eastern North America"
+    },
+    "945": {
+        "ja": "中米",
+        "en": "Central America"
+    },
+    "946": {
+        "ja": "南米西部",
+        "en": "Western South America"
+    },
+    "947": {
+        "ja": "南米中部",
+        "en": "Central South America"
+    },
+    "948": {
+        "ja": "南米東部",
+        "en": "Eastern South America"
+    },
+    "949": {
+        "ja": "北東太平洋",
+        "en": "North East Pacific Ocean"
+    },
+    "950": {
+        "ja": "南太平洋",
+        "en": "South Pacific Ocean"
+    },
+    "951": {
+        "ja": "インドシナ半島付近",
+        "en": "Near Indochina"
+    },
+    "952": {
+        "ja": "フィリピン付近",
+        "en": "Near The Philippines"
+    },
+    "953": {
+        "ja": "インドネシア付近",
+        "en": "Near Indonesia"
+    },
+    "954": {
+        "ja": "グアム付近",
+        "en": "Near Guam"
+    },
+    "955": {
+        "ja": "ニューギニア付近",
+        "en": "Near Papua New Guinea"
+    },
+    "956": {
+        "ja": "ニュージーランド付近",
+        "en": "Near New Zealand"
+    },
+    "957": {
+        "ja": "オーストラリア付近",
+        "en": "Near Australia"
+    },
+    "958": {
+        "ja": "シベリア付近",
+        "en": "Near Siberia"
+    },
+    "959": {
+        "ja": "ロシア西部",
+        "en": "Western Russia"
+    },
+    "960": {
+        "ja": "ロシア中部",
+        "en": "Central Russia"
+    },
+    "961": {
+        "ja": "ロシア東部",
+        "en": "Eastern Russia"
+    },
+    "962": {
+        "ja": "中央アジア",
+        "en": "Central Asia"
+    },
+    "963": {
+        "ja": "中国西部",
+        "en": "Western China"
+    },
+    "964": {
+        "ja": "中国中部",
+        "en": "Central China"
+    },
+    "965": {
+        "ja": "中国東部",
+        "en": "East China"
+    },
+    "966": {
+        "ja": "インド付近",
+        "en": "Near India"
+    },
+    "967": {
+        "ja": "インド洋",
+        "en": "Indian Ocean"
+    },
+    "968": {
+        "ja": "中東",
+        "en": "Middle East"
+    },
+    "969": {
+        "ja": "ヨーロッパ西部",
+        "en": "Western Europe"
+    },
+    "970": {
+        "ja": "ヨーロッパ中部",
+        "en": "Central Europe"
+    },
+    "971": {
+        "ja": "ヨーロッパ東部",
+        "en": "Eastern Europe"
+    },
+    "972": {
+        "ja": "地中海",
+        "en": "Mediterranean Sea"
+    },
+    "973": {
+        "ja": "アフリカ西部",
+        "en": "Western Africa"
+    },
+    "974": {
+        "ja": "アフリカ中部",
+        "en": "Central Africa"
+    },
+    "975": {
+        "ja": "アフリカ東部",
+        "en": "Eastern Africa"
+    },
+    "976": {
+        "ja": "北大西洋",
+        "en": "Northern Atlantic Ocean"
+    },
+    "977": {
+        "ja": "南大西洋",
+        "en": "Southern Atlantic Ocean"
+    },
+    "978": {
+        "ja": "北極付近",
+        "en": "Near the North Pole"
+    },
+    "979": {
+        "ja": "南極付近",
+        "en": "Near Antarctica"
+    },
+    "999": {
+        "ja": "遠地",
+        "en": "Unknown"
+    }
+}

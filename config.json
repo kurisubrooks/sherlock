@@ -1,0 +1,20 @@
+{
+    "port": 80,
+    "api": {
+        "ping": {
+            "description": "Server Ping"
+        },
+        "weather": {
+            "token": true,
+            "description": "Weather Endpoint"
+        },
+        "aqi": {
+            "description": "AQI Endpoint"
+        }
+    },
+    "generator": {
+        "shake": {
+            "description": "Shake Endpoint"
+        }
+    }
+}
