@@ -21,7 +21,7 @@ Earthquake Image Generation API
 ```
 
 **`l`**: epicenter location in [lat, long] format (array)  
-**`e`**: epicenter id (int)  
+**`e`**: epicenter id (JMA format) (int)  
 **`m`**: magnitude (int)  
 **`s`**: seismic intensity (string)  
 **`d`**: depth (int)  
