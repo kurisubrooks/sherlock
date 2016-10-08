@@ -2,16 +2,16 @@
 
 const request = require("request")
 
-module.exports = (server, body) => {
+module.exports = (server, args) => {
     let req = server.req
     let res = server.res
     let socket = server.io
 
-    if (!body.id) body.id = "3255"
+    if (!args.id) args.id = "3255"
 
     let fetch = {
         headers: { "User-Agent": "Mozilla/5.0" },
-        url: `https://waqi.info/api/widget/${body.id}/widget.v1.json`
+        url: `https://waqi.info/api/widget/${args.id}/widget.v1.json`
     }
 
     request.get(fetch, (error, response, body) => {
@@ -66,7 +66,10 @@ module.exports = (server, body) => {
 
         res.send({
             ok: true,
-            loc: data.location,
+            location: {
+                id: Number(args.id),
+                place: data.location
+            },
             aqi: {
                 index: data.index,
                 value: data.value,
