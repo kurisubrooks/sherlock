@@ -1,15 +1,18 @@
 {
     "port": 80,
     "api": {
+        "aqi": {
+            "description": "AQI Endpoint"
+        },
         "ping": {
             "description": "Server Ping"
+        },
+        "translate": {
+            "description": "Google Translate"
         },
         "weather": {
             "token": true,
             "description": "Weather Endpoint"
-        },
-        "aqi": {
-            "description": "AQI Endpoint"
         }
     },
     "generator": {
