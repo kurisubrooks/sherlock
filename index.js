@@ -1,6 +1,8 @@
 "use strict"
 
 // modules
+const request = require("request")
+const moment = require("moment")
 const crypto = require("crypto")
 const chalk = require("chalk")
 const path = require("path")
@@ -13,27 +15,43 @@ const postman = require("body-parser")
 const app = express()
 
 const http = require("http").Server(app)
-const io = require("socket.io")(http)
+const socket = require("socket.io")
+const io = socket(http)
 
 // internal
 const database = require("./database.json")
 const keychain = require("./keychain.json")
-const config = require("./config.json")
+const config = require("./config")
 const sudo = process.getuid && process.getuid() === 0
-const port = 80 //sudo ? 80 : 3000
+const port = config.port
 
-// functions
-let token = (count) => crypto.randomBytes(Math.ceil(count / 2)).toString("hex").slice(0, count)
+// helper functions
+let token = (count) =>
+    crypto.randomBytes(Math.ceil(count / 2)).toString("hex").slice(0, count)
 
 let error = (res, err, log) => {
-    console.log(chalk.red(log))
-    res.send({ ok: false, error: err })
+    if (log) console.log(chalk.red(log))
+    if (res) res.send({ ok: false, error: err })
 }
 
 let run = (req, res, type, endpoint, data, log) => {
-    console.log(chalk.green(log))
+    if (log) console.log(chalk.green(log))
     let location = path.join(__dirname, "modules", type, endpoint, "main.js")
-    let module = require(location)({ req: req, res: res, io: io, keychain: keychain }, data)
+    let module = require(location)({
+        storage: path.join(__dirname, "storage"),
+        req: req, 
+        res: res, 
+        io: io,
+        keychain: keychain,
+        modules: {
+            fs: fs,
+            path: path,
+            lodash: _,
+            request: request,
+            crypto: crypto,
+            chalk: chalk
+        }
+    }, data)
 }
 
 // express config
@@ -41,6 +59,35 @@ app.use(postman.json())
 app.use(postman.urlencoded({ extended: true }))
 app.use(express.static("public"))
 app.use("/static", express.static("static"))
+
+// subprocess data handler & setup
+let dataStore = path.join(__dirname, "storage")
+
+fs.access(dataStore, fs.F_OK, (err) => {
+    if (err) fs.mkdirSync(dataStore)
+})
+
+let getData = () => {
+    _.each(config.data, (val) => {
+        request(val.url, (err, res, body) => {
+            if (err || res.statusCode !== 200) return
+            if (body === undefined || body === null || body === void 0 || body === "") return
+            if (val.format === "json") body = JSON.parse(body)
+
+            fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
+                ok: true,
+                updated: moment().unix(),
+                data: body
+            }, null, 4), (err) => {
+                if (err) throw err
+                console.log(`Saved ${val.name}.${val.format}`)
+            })
+        })
+    })
+}
+
+setInterval(() => getData(), 5 * 60 * 1000)
+getData()
 
 // api handling
 app.all("/api/:path", (req, res) => {
