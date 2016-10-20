@@ -37,7 +37,8 @@ module.exports = (server, body) => {
 
         let data = JSON.parse(body).data.current_observation
 
-        res.send({ ok: true, result: {
+        res.send({
+            ok: true,
             location: {
                 full: data.display_location.full,
                 city: data.display_location.city,
@@ -49,30 +50,32 @@ module.exports = (server, body) => {
                 timezone: data.local_tz_long,
                 offset: data.local_tz_offset
             },
-            icon: data.icon,
-            image: `http://kurisu.pw/static/weather/icons/${icon[data.icon]}_dark.png`,
-            condition: data.weather,
-            temperature: Number(data.temp_c),
-            feels_like: Number(data.feelslike_c),
-            dewpoint: Number(data.dewpoint_c),
-            humidity: data.relative_humidity,
-            pressure: Number(data.pressure_mb),
-            visibility: Number(data.visibility_km),
-            heat_index: data.heat_index_c,
-            solar_radiation: Number(data.solarradiation),
-            UV: Number(data.UV),
-            wind: {
-                chill: data.windchill_c,
-                string: data.wind_string,
-                dir: data.wind_dir,
-                degrees: Number(data.wind_degrees),
-                gust: Number(data.wind_gust_kph),
-                kph: Number(data.wind_kph)
-            },
-            precipitation: {
-                hour: Number(data.precip_1hr_metric),
-                today: Number(data.precip_today_metric)
+            weather: {
+                icon: data.icon,
+                image: `http://kurisu.pw/static/weather/icons/${icon[data.icon]}_dark.png`,
+                condition: data.weather,
+                temperature: Number(data.temp_c),
+                feels_like: Number(data.feelslike_c),
+                dewpoint: Number(data.dewpoint_c),
+                humidity: data.relative_humidity,
+                pressure: Number(data.pressure_mb),
+                visibility: Number(data.visibility_km),
+                heat_index: data.heat_index_c,
+                solar_radiation: Number(data.solarradiation),
+                UV: Number(data.UV),
+                wind: {
+                    chill: data.windchill_c,
+                    string: data.wind_string,
+                    dir: data.wind_dir,
+                    degrees: Number(data.wind_degrees),
+                    gust: Number(data.wind_gust_kph),
+                    kph: Number(data.wind_kph)
+                },
+                precipitation: {
+                    hour: Number(data.precip_1hr_metric),
+                    today: Number(data.precip_today_metric)
+                }
             }
-        }})
+        })
     })
 }
