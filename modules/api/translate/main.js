@@ -54,7 +54,7 @@ module.exports = (server, body) => {
         })
     }
 
-    request.get(fetch, (error, response, body) => {
+    request.get(fetch, (error, response, result) => {
         if (error) {
             res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" })
             return error
@@ -64,10 +64,19 @@ module.exports = (server, body) => {
         }
 
         try {
-            let data = JSON.parse(body.replace(/\,+/g, ","))
+            let data = JSON.parse(result.replace(/\,+/g, ","))
+            let to = body.to
+            let from = data[1]
+            let query = body.query
             let translation = data[0][0][0]
 
-            res.send({ ok: true, result: translation })
+            res.send({
+                ok: true,
+                to: to,
+                from: from,
+                query: query,
+                result: translation
+            })
 
             return
         } catch(e) {
