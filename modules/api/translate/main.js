@@ -1,20 +1,14 @@
 "use strict"
 
-const request = require("request")
 const ISO = require("iso-639-1")
 const qs = require("qs")
 
-let validate = (query) => {
-    if (ISO.validate(query)) {
-        return query
-    } else {
-        return ISO.getAllNames().indexOf(query) >= 0 ? ISO.getCode(query) : null
-    }
-}
+let validate = (query) =>
+    ISO.validate(query) ? query : ISO.getAllNames().indexOf(query) >= 0 ? ISO.getCode(query) : null
 
 module.exports = (server, body) => {
-    let req = server.req
     let res = server.res
+    let request = server.modules.request
 
     let url = "http://translate.googleapis.com/translate_a/single?"
 
