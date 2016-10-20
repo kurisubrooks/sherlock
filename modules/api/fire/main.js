@@ -1,9 +1,7 @@
 "use strict"
 
-const _ = require("lodash")
 const turf = require("@turf/turf")
 const mark = require("to-markdown")
-const request = require("request")
 
 const radius = turf.circle(turf.point([150.689713, -33.737247]), 20)
 const warningLevels = [ "Emergency Warning", "Watch and Act", "Advice", "Not Applicable" ]
@@ -20,13 +18,20 @@ let remove = (object, key) => {
 }
 
 module.exports = (server, args) => {
-    let req = server.req
     let res = server.res
-    let socket = server.io
+    let _ = server.modules.lodash
+    let fs = server.modules.fs
+    let path = server.modules.path
+    let moment = server.modules.moment
 
-    request("http://www.rfs.nsw.gov.au/feeds/majorIncidents.json", (err, resp, body) => {
-        let majorIncidents = typeof body !== undefined ? JSON.parse(body) : {}
-        let features = majorIncidents.features ? majorIncidents.features : {}
+    fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
+        if (error) {
+            console.error(error)
+            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" })
+            return error
+        }
+
+        let features = JSON.parse(body).data.features
         let results = []
         let all = []
 
