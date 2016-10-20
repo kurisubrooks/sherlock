@@ -47,6 +47,7 @@ let run = (req, res, type, endpoint, data, log) => {
             fs: fs,
             path: path,
             lodash: _,
+            moment: moment,
             request: request,
             crypto: crypto,
             chalk: chalk
