@@ -1,32 +1,39 @@
 "use strict"
 
+let icon = (condition, time) => {
+    let day = time >= 5 && time <= 19 ? true : false
+
+    let icons = {
+        "chanceflurries":   "flurries_dark",
+        "chancerain":       "showers_rain_dark",
+        "chancesleat":      "wintry_mix_rain_snow_dark",
+        "chancesnow":       "snow_showers_snow_dark",
+        "chancetstorms":    day ? "isolated_scattered_tstorms_day_dark" : "isolated_scattered_tstorms_night_dark",
+        "clear":            day ? "sunny_dark" : "clear_night_dark",
+        "cloudy":           "cloudy_dark",
+        "flurries":         "flurries_dark",
+        "fog":              "haze_fog_dust_smoke_dark",
+        "hazy":             "haze_fog_dust_smoke_dark",
+        "mostlycloudy":     day ? "mostly_cloudy_day_dark" : "mostly_cloudy_night_dark",
+        "mostlysunny":      "mostly_sunny_dark",
+        "partlycloudy":     day ? "partly_cloudy_dark" : "partly_cloudy_night_dark",
+        "partlysunny":      "partly_sunny_dark",
+        "rain":             "showers_rain_dark",
+        "sleat":            "wintry_mix_rain_snow_dark",
+        "snow":             "snow_showers_snow_dark",
+        "sunny":            "sunny_dark",
+        "tstorms":          day ? "isolated_scattered_tstorms_day_dark" : "isolated_scattered_tstorms_night_dark",
+        "unknown":          "unknown"
+    }
+
+    return icons[condition]
+}
+
 module.exports = (server, body) => {
     let res = server.res
     let fs = server.modules.fs
     let path = server.modules.path
-
-    let icon = {
-        "chanceflurries": "flurry",
-        "chancerain": "rain",
-        "chancesleat": "sleet",
-        "chancesnow": "snow_showers_snow",
-        "chancetstorms": "strong_tstorms",
-        "clear": "clear_night",
-        "cloudy": "cloudy",
-        "flurries": "flurries",
-        "fog": "haze_fog_dust_smoke",
-        "hazy": "haze_fog_dust_smoke",
-        "mostlycloudy": "mostly_cloudy",
-        "mostlysunny": "mostly_sunny",
-        "partlycloudy": "partly_cloudy",
-        "partlysunny": "partly_sunny",
-        "rain": "showers_rain",
-        "sleat": "wintry_mix_rain_snow",
-        "snow": "snow_showers_snow",
-        "sunny": "sunny",
-        "tstorms": "strong_tstorms",
-        "unknown": "unknown"
-    }
+    let moment = server.modules.moment
 
     fs.readFile(path.join(server.storage, "weather.json"), (error, body) => {
         if (error) {
@@ -36,6 +43,7 @@ module.exports = (server, body) => {
         }
 
         let data = JSON.parse(body).data.current_observation
+        let icon_code = icon(data.icon, moment.unix(data.local_epoch).format("HH"))
 
         res.send({
             ok: true,
@@ -46,13 +54,13 @@ module.exports = (server, body) => {
                 country: data.display_location.country_iso3166,
                 lat: data.display_location.latitude,
                 long: data.display_location.longitude,
-                time: Number(data.local_epoch),
+                time: data.local_epoch,
                 timezone: data.local_tz_long,
                 offset: data.local_tz_offset
             },
             weather: {
-                icon: data.icon,
-                image: `http://kurisu.pw/static/weather/icons/${icon[data.icon]}_dark.png`,
+                icon: icon_code,
+                image: `http://kurisu.pw/static/weather/icons/${icon_code}.png`,
                 condition: data.weather,
                 temperature: Number(data.temp_c),
                 feels_like: Number(data.feelslike_c),
