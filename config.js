@@ -38,7 +38,7 @@ module.exports = {
         weather: {
             name: "weather",
             format: "json",
-            url: `http://api.wunderground.com/api/${keys.weather}/conditions/q/AU/Penrith.json`
+            url: `http://api.wunderground.com/api/${keys.weather}/conditions/forecast10day/astronomy/q/Australia/Penrith.json`
         }
     }
 }
