@@ -12,6 +12,7 @@ const _ = require("lodash")
 // server
 const express = require("express")
 const postman = require("body-parser")
+const cors = require("cors")
 const app = express()
 
 const http = require("http").Server(app)
@@ -56,6 +57,7 @@ let run = (req, res, type, endpoint, data, log) => {
 }
 
 // express config
+app.use(cors())
 app.use(postman.json())
 app.use(postman.urlencoded({ extended: true }))
 app.use(express.static("public"))
