@@ -5,10 +5,16 @@ const suncalc = require("suncalc")
 let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n)
 
 let icon = (condition, now, lat, long) => {
-    let time = suncalc.getTimes(new Date(), lat, long)
-    let sunrise = `${pad(time.sunrise.getHours())}${pad(time.sunrise.getMinutes())}`
-    let sunset = `${pad(time.sunset.getHours())}${pad(time.sunset.getMinutes())}`
-    let day = now >= sunrise && now <= sunset ? true : false
+    let time, sunrise, sunset, day
+
+    if (now && lat && long) {
+        time = suncalc.getTimes(new Date(), lat, long)
+        sunrise = `${pad(time.sunrise.getHours())}${pad(time.sunrise.getMinutes())}`
+        sunset = `${pad(time.sunset.getHours())}${pad(time.sunset.getMinutes())}`
+        day = now >= sunrise && now <= sunset ? true : false
+    } else {
+        day = true
+    }
 
     let icons = {
         "chanceflurries":   "flurries",
@@ -38,6 +44,7 @@ let icon = (condition, now, lat, long) => {
 
 module.exports = (server, body) => {
     let res = server.res
+    let _ = server.modules.lodash
     let fs = server.modules.fs
     let path = server.modules.path
     let moment = server.modules.moment
@@ -49,48 +56,84 @@ module.exports = (server, body) => {
             return error
         }
 
-        let data = JSON.parse(body).data.current_observation
-        let icon_code = icon(data.icon, moment.unix(data.local_epoch).format("HHMM"), data.display_location.latitude, data.display_location.longitude)
+        let data = JSON.parse(body).data
+        let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.current_observation.display_location.latitude, data.current_observation.display_location.longitude)
 
-        res.send({
+        let result = {
             ok: true,
             location: {
-                full: data.display_location.full,
-                city: data.display_location.city,
-                state: data.display_location.state,
-                country: data.display_location.country_iso3166,
-                lat: data.display_location.latitude,
-                long: data.display_location.longitude,
-                time: data.local_epoch,
-                timezone: data.local_tz_long,
-                offset: data.local_tz_offset
+                full: data.current_observation.display_location.full,
+                city: data.current_observation.display_location.city,
+                state: data.current_observation.display_location.state,
+                country: data.current_observation.display_location.country_iso3166,
+                lat: data.current_observation.display_location.latitude,
+                long: data.current_observation.display_location.longitude,
+                time: data.current_observation.local_epoch,
+                timezone: data.current_observation.local_tz_long,
+                offset: data.current_observation.local_tz_offset
             },
             weather: {
                 icon: icon_code,
                 image: `http://kurisu.pw/static/weather/icons/${icon_code}_dark.png`,
-                condition: data.weather,
-                temperature: Number(data.temp_c),
-                feels_like: Number(data.feelslike_c),
-                dewpoint: Number(data.dewpoint_c),
-                humidity: data.relative_humidity,
-                pressure: Number(data.pressure_mb),
-                visibility: Number(data.visibility_km),
-                heat_index: data.heat_index_c,
-                solar_radiation: Number(data.solarradiation),
-                UV: Number(data.UV),
+                condition: data.current_observation.weather,
+                temperature: Number(data.current_observation.temp_c),
+                feels_like: Number(data.current_observation.feelslike_c),
+                dewpoint: Number(data.current_observation.dewpoint_c),
+                humidity: data.current_observation.relative_humidity,
+                pressure: data.current_observation.pressure_mb + " mBar",
+                visibility: data.current_observation.visibility_km + " km",
+                heat_index: data.current_observation.heat_index_c,
+                solar_radiation: Number(data.current_observation.solarradiation),
+                UV: Number(data.current_observation.UV),
                 wind: {
-                    chill: data.windchill_c,
-                    string: data.wind_string,
-                    dir: data.wind_dir,
-                    degrees: Number(data.wind_degrees),
-                    gust: Number(data.wind_gust_kph),
-                    kph: Number(data.wind_kph)
+                    chill: data.current_observation.windchill_c,
+                    direction: data.current_observation.wind_dir,
+                    degrees: Number(data.current_observation.wind_degrees),
+                    gust: data.current_observation.wind_gust_kph + " km/h",
+                    kph: data.current_observation.wind_kph + " km/h"
                 },
                 precipitation: {
-                    hour: Number(data.precip_1hr_metric),
-                    today: Number(data.precip_today_metric)
+                    hour: data.current_observation.precip_1hr_metric + " mm",
+                    today: data.current_observation.precip_today_metric + " mm"
                 }
-            }
+            },
+            forecast: []
+        }
+
+        _.each(data.forecast.simpleforecast.forecastday, (object) => {
+            result.forecast.push({
+                date: {
+                    day: object.date.day,
+                    month: object.date.month,
+                    year: object.date.year,
+                    total: object.date.yday,
+                    display: {
+                        day: object.date.weekday,
+                        day_short: object.date.weekday_short,
+                        month: object.date.monthname,
+                        month_short: object.date.monthname_short
+                    },
+                    time: object.date.epoch,
+                    timezone: object.date.tz_long
+                },
+                icon: icon(object.icon),
+                image: `http://kurisu.pw/static/weather/icons/${icon(object.icon)}_dark.png`,
+                condition: object.conditions,
+                high: Number(object.high.celsius),
+                low: Number(object.low.celsius),
+                humidity: object.avehumidity + "%",
+                rain_chance: object.pop + "%",
+                rainfall: object.qpf_allday.mm + " mm",
+                snowfall: object.snow_allday.cm + " cm",
+                wind: {
+                    max: object.maxwind.kph + " km/h",
+                    average: object.avewind.kph + " km/h",
+                    direction: object.avewind.dir,
+                    degrees: Number(object.avewind.degrees)
+                }
+            })
         })
+
+        res.send(result)
     })
 }
