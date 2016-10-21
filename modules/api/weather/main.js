@@ -1,32 +1,39 @@
 "use strict"
 
-let icon = (condition, time) => {
-    let day = time >= 5 && time <= 19 ? true : false
+const suncalc = require("suncalc")
+
+let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n)
+
+let icon = (condition, now, lat, long) => {
+    let time = suncalc.getTimes(new Date(), lat, long)
+    let sunrise = `${pad(time.sunrise.getHours())}${pad(time.sunrise.getMinutes())}`
+    let sunset = `${pad(time.sunset.getHours())}${pad(time.sunset.getMinutes())}`
+    let day = now >= sunrise && now <= sunset ? true : false
 
     let icons = {
-        "chanceflurries":   "flurries_dark",
-        "chancerain":       "showers_rain_dark",
-        "chancesleat":      "wintry_mix_rain_snow_dark",
-        "chancesnow":       "snow_showers_snow_dark",
-        "chancetstorms":    day ? "isolated_scattered_tstorms_day_dark" : "isolated_scattered_tstorms_night_dark",
-        "clear":            day ? "sunny_dark" : "clear_night_dark",
-        "cloudy":           "cloudy_dark",
-        "flurries":         "flurries_dark",
-        "fog":              "haze_fog_dust_smoke_dark",
-        "hazy":             "haze_fog_dust_smoke_dark",
-        "mostlycloudy":     day ? "mostly_cloudy_day_dark" : "mostly_cloudy_night_dark",
-        "mostlysunny":      "mostly_sunny_dark",
-        "partlycloudy":     day ? "partly_cloudy_dark" : "partly_cloudy_night_dark",
-        "partlysunny":      "partly_sunny_dark",
-        "rain":             "showers_rain_dark",
-        "sleat":            "wintry_mix_rain_snow_dark",
-        "snow":             "snow_showers_snow_dark",
-        "sunny":            "sunny_dark",
-        "tstorms":          day ? "isolated_scattered_tstorms_day_dark" : "isolated_scattered_tstorms_night_dark",
+        "chanceflurries":   "flurries",
+        "chancerain":       "showers_rain",
+        "chancesleat":      "wintry_mix_rain_snow",
+        "chancesnow":       "snow_showers_snow",
+        "chancetstorms":    day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
+        "clear":            day ? "clear_day" : "clear_night",
+        "cloudy":           "cloudy",
+        "flurries":         "flurries",
+        "fog":              "haze_fog_dust_smoke",
+        "hazy":             "haze_fog_dust_smoke",
+        "mostlycloudy":     day ? "mostly_cloudy_day" : "mostly_cloudy_night",
+        "mostlysunny":      "mostly_sunny",
+        "partlycloudy":     day ? "partly_cloudy" : "partly_cloudy_night",
+        "partlysunny":      "partly_sunny",
+        "rain":             "showers_rain",
+        "sleat":            "wintry_mix_rain_snow",
+        "snow":             "snow_showers_snow",
+        "sunny":            "clear_day",
+        "tstorms":          day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
         "unknown":          "unknown"
     }
 
-    return icons[condition]
+    return icons[condition] ? icons[condition] : icons.unknown
 }
 
 module.exports = (server, body) => {
@@ -43,7 +50,7 @@ module.exports = (server, body) => {
         }
 
         let data = JSON.parse(body).data.current_observation
-        let icon_code = icon(data.icon, moment.unix(data.local_epoch).format("HH"))
+        let icon_code = icon(data.icon, moment.unix(data.local_epoch).format("HHMM"), data.display_location.latitude, data.display_location.longitude)
 
         res.send({
             ok: true,
@@ -60,7 +67,7 @@ module.exports = (server, body) => {
             },
             weather: {
                 icon: icon_code,
-                image: `http://kurisu.pw/static/weather/icons/${icon_code}.png`,
+                image: `http://kurisu.pw/static/weather/icons/${icon_code}_dark.png`,
                 condition: data.weather,
                 temperature: Number(data.temp_c),
                 feels_like: Number(data.feelslike_c),
