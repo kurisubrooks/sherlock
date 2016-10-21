@@ -1,16 +1,13 @@
 "use strict"
 
-const suncalc = require("suncalc")
-
 let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n)
 
-let icon = (condition, now, lat, long) => {
-    let time, sunrise, sunset, day
+let icon = (condition, now, phases) => {
+    let sunrise, sunset, day
 
-    if (now && lat && long) {
-        time = suncalc.getTimes(new Date(), lat, long)
-        sunrise = `${pad(time.sunrise.getHours())}${pad(time.sunrise.getMinutes())}`
-        sunset = `${pad(time.sunset.getHours())}${pad(time.sunset.getMinutes())}`
+    if (now && phases) {
+        sunrise = `${pad(phases.sunrise.hour)}${pad(phases.sunrise.minute)}`
+        sunset = `${pad(phases.sunset.hour)}${pad(phases.sunset.minute)}`
         day = now >= sunrise && now <= sunset ? true : false
     } else {
         day = true
@@ -57,7 +54,7 @@ module.exports = (server, body) => {
         }
 
         let data = JSON.parse(body).data
-        let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.current_observation.display_location.latitude, data.current_observation.display_location.longitude)
+        let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase)
 
         let result = {
             ok: true,
