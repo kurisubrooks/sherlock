@@ -1,16 +1,16 @@
-"use strict"
+"use strict";
 
-let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n)
+let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n);
 
 let icon = (condition, now, phases) => {
-    let sunrise, sunset, day
+    let sunrise, sunset, day;
 
     if (now && phases) {
-        sunrise = `${pad(phases.sunrise.hour)}${pad(phases.sunrise.minute)}`
-        sunset = `${pad(phases.sunset.hour)}${pad(phases.sunset.minute)}`
-        day = now >= sunrise && now <= sunset ? true : false
+        sunrise = `${pad(phases.sunrise.hour)}${pad(phases.sunrise.minute)}`;
+        sunset = `${pad(phases.sunset.hour)}${pad(phases.sunset.minute)}`;
+        day = now >= sunrise && now <= sunset ? true : false;
     } else {
-        day = true
+        day = true;
     }
 
     let icons = {
@@ -34,27 +34,27 @@ let icon = (condition, now, phases) => {
         "sunny":            "clear_day",
         "tstorms":          day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
         "unknown":          "unknown"
-    }
+    };
 
-    return icons[condition] ? icons[condition] : icons.unknown
-}
+    return icons[condition] ? icons[condition] : icons.unknown;
+};
 
 module.exports = (server, body) => {
-    let res = server.res
-    let _ = server.modules.lodash
-    let fs = server.modules.fs
-    let path = server.modules.path
-    let moment = server.modules.moment
+    let res = server.res;
+    let _ = server.modules.lodash;
+    let fs = server.modules.fs;
+    let path = server.modules.path;
+    let moment = server.modules.moment;
 
     fs.readFile(path.join(server.storage, "weather.json"), (error, body) => {
         if (error) {
-            console.error(error)
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" })
-            return error
+            console.error(error);
+            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return error;
         }
 
-        let data = JSON.parse(body).data
-        let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase)
+        let data = JSON.parse(body).data;
+        let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase);
 
         let result = {
             ok: true,
@@ -95,7 +95,7 @@ module.exports = (server, body) => {
                 }
             },
             forecast: []
-        }
+        };
 
         _.each(data.forecast.simpleforecast.forecastday, (object) => {
             result.forecast.push({
@@ -128,9 +128,9 @@ module.exports = (server, body) => {
                     direction: object.avewind.dir,
                     degrees: Number(object.avewind.degrees)
                 }
-            })
-        })
+            });
+        });
 
-        res.send(result)
-    })
-}
+        res.send(result);
+    });
+};

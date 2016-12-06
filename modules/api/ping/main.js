@@ -1,3 +1,3 @@
-"use strict"
+"use strict";
 
-module.exports = server => server.res.send({ ok: true, result: "pong" })
+module.exports = server => server.res.send({ ok: true, result: "pong" });
