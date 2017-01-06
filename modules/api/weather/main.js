@@ -2,6 +2,13 @@
 
 let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n);
 
+let test = (c) => {
+    if (c === undefined || c === null || c === void 0 || c === "")
+        return 0;
+    else
+        return 1;
+};
+
 let icon = (condition, now, phases) => {
     let sunrise, sunset, day;
 
@@ -35,6 +42,9 @@ let icon = (condition, now, phases) => {
         "tstorms":          day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
         "unknown":          "unknown"
     };
+
+    if (condition === undefined || condition === null || condition === void 0 || condition === "")
+        return icons.unknown;
 
     return icons[condition] ? icons[condition] : icons.unknown;
 };
@@ -79,8 +89,6 @@ module.exports = (server, body) => {
                 humidity: data.current_observation.relative_humidity,
                 pressure: data.current_observation.pressure_mb + " mBar",
                 visibility: data.current_observation.visibility_km + " km",
-                heat_index: data.current_observation.heat_index_c,
-                solar_radiation: Number(data.current_observation.solarradiation),
                 UV: Number(data.current_observation.UV),
                 wind: {
                     chill: data.current_observation.windchill_c,
