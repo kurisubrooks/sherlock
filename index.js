@@ -37,19 +37,19 @@ let error = (res, err, log) => {
 
 let run = (req, res, type, endpoint, data, log) => {
     if (log) console.log(chalk.green(log));
-    let location = path.join(__dirname, "modules", type, endpoint, "main.js");
-    let module = require(location)({
-        storage: path.join(__dirname, "storage"),
-        req: req,
-        res: res,
-        io: io,
-        keychain: keychain,
-        modules: { fs: fs, path: path, lodash: _, moment: moment, request: request, crypto: crypto, chalk: chalk }
-    }, data);
-};
-
-let start = (thing, interval) => {
-
+    try {
+        let location = path.join(__dirname, "modules", type, endpoint, "main.js");
+        let module = require(location)({
+            storage: path.join(__dirname, "storage"),
+            req: req,
+            res: res,
+            io: io,
+            keychain: keychain,
+            modules: { fs: fs, path: path, lodash: _, moment: moment, request: request, crypto: crypto, chalk: chalk }
+        }, data);
+    } catch(error) {
+        console.log(chalk.red(log));
+    }
 };
 
 // express config
@@ -66,11 +66,12 @@ fs.access(dataStore, fs.F_OK, (err) => {
     if (err) fs.mkdirSync(dataStore);
 });
 
-let getData = () => {
-    _.each(config.data, (val) => {
-        request(val.url, (err, res, body) => {
+// start subprocesses
+_.each(config.data, (val) => {
+    let get = (url) => {
+        request(url, (err, res, body) => {
             if (err || res.statusCode !== 200) return;
-            if (body === undefined || body === null || body === void 0 || body === "") return;
+            if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) return;
             if (val.format === "json") body = JSON.parse(body);
 
             fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
@@ -78,15 +79,17 @@ let getData = () => {
                 updated: moment().unix(),
                 data: body
             }, null, 4), (err) => {
-                if (err) throw err;
-                console.log(chalk.magenta(`Saved ${val.name}.${val.format}`));
+                if (err) {
+                    console.log(chalk.red(`Unable to save ${val.name}.${val.format}`));
+                    console.error(err);
+                }
             });
         });
-    });
-};
+    };
 
-setInterval(() => getData(), 5 * 60 * 1000);
-getData();
+    setInterval(() => get(val.url), val.interval * 60 * 1000);
+    get(val.url);
+});
 
 // socket
 io.on("connection", (socket) => {
@@ -106,7 +109,7 @@ app.all("/api/:path", (req, res) => {
     let ip = req.ip.replace("::ffff:", "");
 
     if (req.params) {
-        let log = `${ip} ${req.params.path} ${JSON.stringify(data)}`;
+        let log = `${ip} ${req.params.path} ${data ? JSON.stringify(data) : ""}`;
         let type;
 
         // module types
