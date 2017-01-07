@@ -1,92 +1,136 @@
-"use strict"
+"use strict";
 
-const turf = require("@turf/turf")
-const mark = require("to-markdown")
+let alertLevels = [
+    "Not Applicable",
+    "Advice",
+    "Watch and Act",
+    "Emergency Warning"
+];
 
-const radius = turf.circle(turf.point([150.689713, -33.737247]), 20)
-const warningLevels = [ "Emergency Warning", "Watch and Act", "Advice", "Not Applicable" ]
-const warningIndex = { "Emergency Warning": 3, "Watch and Act": 2, "Advice": 1, "Not Applicable": 0 }
+let alertType = [
+    "Out of control",
+    "Being controlled",
+    "Under control"
+];
 
-let rename = (object, key, to, value) => {
-    if (value !== undefined || null) object[key] = value
-    object[to] = object[key]
-    delete object[key]
-}
+let fireType = [
+    "Bush Fire",
+    "Grass Fire",
+    "Hazard Reduction",
+    "Structure Fire",
+    "Burn off"
+];
 
-let remove = (object, key) => {
-    delete object[key]
-}
+let removeEvents = [
+    "MVA/Transport",
+    "Assist Other Agency",
+    "Search/Rescue",
+    "Flood/Storm/Tree Down",
+    "Vehicle/Equipment Fire",
+    "Fire Alarm",
+    "Medical",
+    "HAZMAT",
+    "Other"
+];
 
 module.exports = (server, args) => {
-    let res = server.res
-    let _ = server.modules.lodash
-    let fs = server.modules.fs
-    let path = server.modules.path
-    let moment = server.modules.moment
+    let res = server.res;
+    let _ = server.modules.lodash;
+    let fs = server.modules.fs;
+    let path = server.modules.path;
+    let moment = server.modules.moment;
+    let turf = require("@turf/turf");
+    let markdown = require("to-markdown");
 
+    // Load cached data
     fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
         if (error) {
-            console.error(error)
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" })
-            return error
+            console.error(error);
+            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return error;
         }
 
-        let features = JSON.parse(body).data.features
-        let results = []
-        let all = []
+        let incidents = JSON.parse(body).data;
+        let results = [];
+        let sorted = [];
+        let radius = 0.025;
 
-        // Find intersecting points inside search radius
-        _.each(features, (feature) => {
-            let geometry = feature.geometry
-            let intersect = geometry.type === "Point" ? turf.circle(geometry, 0.025) : geometry.geometries[1].geometries[0]
-            let result = turf.intersect(radius, intersect)
+        // Region filters
+        let filters = {
+            emergency: require("./filter_emergency.json"),
+            local: require("./filter_penrith.json")
+        };
 
-            if (result !== undefined) results.push(feature.properties)
-        })
+        // Formatting function
+        let format = (feature) => {
+            let properties = feature.properties;
+            let name = properties.title;
+            let description = markdown(properties.description).split("\n");
+            let formatted = { };
+            let final = { };
 
-        // Sort results by level
-        results.sort((a, b) => 
-            warningLevels.indexOf(a.category) - warningLevels.indexOf(b.category))
+            // Split Original String into Parsable Object
+            _.each(description, (i) => {
+                description[i] = i.split(/:(.+)?/);
+                description[i].splice(2, 1);
+                description[i][1] = description[i][1].trim();
+                formatted[description[i][0]] = description[i][1];
+            });
 
-        // Format each result
-        _.each(results, (r) => {
-            let o = {}
+            // if Level "Not Applicable" && Matches Blacklist, Remove
+            if (alertLevels.indexOf(properties.category) === 0 && removeEvents.indexOf(formatted.TYPE) >= 0) return;
 
-            r.description = mark(r.description).split("\n")
-            r.guid = r.guid.replace("https://incidents.rfs.nsw.gov.au/api/v1/incidents/", "")
-            r.published = r.pubDate
+            // Format Data
+            final.title = properties.title;
+            final.guid = Number(properties.guid.replace("https://incidents.rfs.nsw.gov.au/api/v1/incidents/", ""));
+            final.level = alertLevels.indexOf(properties.category);
+            final.type = formatted.TYPE;
+            final.category = properties.category;
+            final.location = formatted.LOCATION;
+            final.status = formatted.STATUS;
+            final.fire = formatted.FIRE === "Yes" ? true : false;
+            final.size = Number(formatted.SIZE.replace(" ha", ""));
+            final.updated = Date.parse(formatted.UPDATED);
+            final.geojson = feature;
+            final.geojson.properties = { };
 
-            _.each(r.description, (s) => {
-                r.description[s] = s.split(/:(.+)?/)
-                r.description[s].splice(2, 1)
-                r.description[s][1] = r.description[s][1].trim()
-                o[r.description[s][0]] = r.description[s][1]
-            })
+            results.push(final);
+        };
 
-            rename(o, "ALERT LEVEL", "level", warningIndex[o["ALERT LEVEL"]])
-            rename(o, "LOCATION", "location")
-            rename(o, "COUNCIL AREA", "council")
-            rename(o, "STATUS", "status")
-            rename(o, "TYPE", "type")
-            rename(o, "FIRE", "fire", o.FIRE === "Yes" ? true : false)
-            rename(o, "SIZE", "size")
-            rename(o, "RESPONSIBLE AGENCY", "agency")
-            rename(o, "UPDATED", "updated", Date.parse(o.UPDATED))
-            remove(r, "description")
-            remove(r, "link")
-            remove(r, "guid_isPermaLink")
-            remove(r, "pubDate")
+        // Each filter
+        _.each(filters.local.features, (filterFeature) => {
+            let geometry = filterFeature.geometry;
+            let filter = geometry.type === "Point" ? turf.circle(geometry, geometry.properties.radius) : geometry;
 
-            r.data = o
-            all.push(r)
-        })
+            // Each incident
+            _.each(incidents.features, (feature) => {
+                let geometry = feature.geometry;
 
-        // Respond with results
+                // filter results to overlapping regions
+                let result = turf.intersect(filter, geometry.type === "Point" ? turf.circle(geometry, radius) : geometry.geometries[1].geometries[0]);
+
+                // if match
+                if (result !== undefined) format(feature);
+            });
+        });
+
+        // Sort results by HIGH→LOW warning levels
+        results.sort((a, b) => {
+            // if a's level is higher than b's, prepend
+            if (alertLevels.indexOf(a.category) > alertLevels.indexOf(b.category)) {
+                return -1;
+            // else append
+            } else {
+                return 1;
+            }
+        });
+
+        // Serve Data
         res.send({
             ok: true,
-            total: features.length,
+            total: incidents.features.length,
             search: results.length,
-            fires: all
-        })
-    })
-}
+            fires: results
+        });
+    });
+};
