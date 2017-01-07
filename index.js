@@ -48,7 +48,9 @@ let run = (req, res, type, endpoint, data, log) => {
             modules: { fs: fs, path: path, lodash: _, moment: moment, request: request, crypto: crypto, chalk: chalk }
         }, data);
     } catch(error) {
-        console.log(chalk.red(log));
+        console.log(chalk.red(error));
+        res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+        return;
     }
 };
 
