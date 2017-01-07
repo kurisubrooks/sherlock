@@ -1,10 +1,21 @@
 "use strict";
 
-const ISO = require("iso-639-1");
+const langs = require("./langs");
 const qs = require("qs");
 
-let validate = (query) =>
-    ISO.validate(query) ? query : ISO.getAllNames().indexOf(query) >= 0 ? ISO.getCode(query) : null;
+let validate = (query) => {
+    let found = false;
+    let match = {};
+
+    langs.forEach((v, k) => {
+        if (query.toLowerCase() === v.code) {
+            found = true;
+            match = v;
+        }
+    });
+
+    return !found ? null : match;
+};
 
 module.exports = (server, body) => {
     let res = server.res;
@@ -28,7 +39,7 @@ module.exports = (server, body) => {
         return;
     }
 
-    if (!validate(body.to) || (body.from && !validate(body.from))) {
+    if (!validate(body.to) || body.from && !validate(body.from)) {
         res.send({ ok: false, error: "unknown language" });
         return;
     }
@@ -59,8 +70,8 @@ module.exports = (server, body) => {
 
         try {
             let data = JSON.parse(result.replace(/\,+/g, ","));
-            let to = body.to;
-            let from = data[1];
+            let to = validate(body.to);
+            let from = validate(data[1]);
             let query = body.query;
             let translation = data[0][0][0];
 
