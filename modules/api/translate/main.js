@@ -34,17 +34,26 @@ module.exports = (server, body) => {
             .replace(/　/g, " ");
     };
 
-    if (!body.to || !body.query) {
+    if (!body.query) {
         res.send({ ok: false, error: "missing fields" });
         return;
     }
 
-    if (!validate(body.to) || body.from && !validate(body.from)) {
-        res.send({ ok: false, error: "unknown language" });
-        return;
+    if (body.to) {
+        if (!validate(body.to)) {
+            res.send({ ok: false, error: "unknown language in 'to' field" });
+            return;
+        }
     }
 
-    let to_lang = body.to;
+    if (body.from) {
+        if (!validate(body.from)) {
+            res.send({ ok: false, error: "unknown language in 'from' field" });
+            return;
+        }
+    }
+
+    let to_lang = body.to ? body.to : "en";
     let from_lang = body.from ? body.from : "auto";
     let query = slicer(body.query);
 
@@ -70,7 +79,7 @@ module.exports = (server, body) => {
 
         try {
             let data = JSON.parse(result.replace(/\,+/g, ","));
-            let to = validate(body.to);
+            let to = validate(body.to ? body.to : "en");
             let from = validate(data[1]);
             let query = body.query;
             let translation = data[0][0][0];
