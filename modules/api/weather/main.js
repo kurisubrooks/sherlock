@@ -64,6 +64,13 @@ module.exports = (server, body) => {
         }
 
         let data = JSON.parse(body).data;
+
+        if (!data.current_observation) {
+            console.error("Missing Data");
+            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return;
+        }
+
         let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase);
 
         let result = {
