@@ -57,7 +57,8 @@ module.exports = (server, args) => {
 
         // Region filters
         let filters = {
-            emergency: require("./filter_emergency.json"),
+            //emergency: require("./filter_emergency.json"),
+            //debug: require("./filter_debug.json"),
             local: require("./filter_penrith.json")
         };
 
@@ -81,7 +82,7 @@ module.exports = (server, args) => {
             if (alertLevels.indexOf(properties.category) === 0 && removeEvents.indexOf(formatted.TYPE) >= 0) return;
 
             // Format Data
-            final.title = properties.title;
+            final.title = properties.title.trim();
             final.guid = Number(properties.guid.replace("https://incidents.rfs.nsw.gov.au/api/v1/incidents/", ""));
             final.level = alertLevels.indexOf(properties.category);
             final.type = formatted.TYPE;
@@ -115,12 +116,42 @@ module.exports = (server, args) => {
         });
 
         // Sort results by HIGH→LOW warning levels
+        // then sort by Distance from Home
         results.sort((a, b) => {
-            // if a's level is higher than b's, prepend
-            if (alertLevels.indexOf(a.category) > alertLevels.indexOf(b.category)) {
+            let home = ["-33.745843", "150.712301"];
+
+            if (a.level > b.level) {
+                // if a's level is higher than b's, prepend
                 return -1;
-            // else append
+            } else if (a.level === b.level) {
+                // if a's warning level matches b's
+                let a_lat, a_long, b_lat, b_long;
+
+                // set lat, long vars
+                if (a.geojson.geometry.type === "Point") {
+                    a_lat = a.geojson.geometry.coordinates[1];
+                    a_long = a.geojson.geometry.coordinates[0];
+                } else {
+                    a_lat = a.geojson.geometry.geometries[0].coordinates[1];
+                    a_long = a.geojson.geometry.geometries[0].coordinates[0];
+                }
+
+                if (b.geojson.geometry.type === "Point") {
+                    b_lat = b.geojson.geometry.coordinates[1];
+                    b_long = b.geojson.geometry.coordinates[0];
+                } else {
+                    b_lat = b.geojson.geometry.geometries[0].coordinates[1];
+                    b_long = b.geojson.geometry.geometries[0].coordinates[0];
+                }
+
+                // sort by distance
+                if (Math.abs(Math.sqrt(Math.pow((a_lat - home[0]), 2) + Math.pow((a_long - home[1]), 2))) < Math.abs(Math.sqrt(Math.pow((b_lat - home[0]), 2) + Math.pow((b_long - home[1]), 2)))) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             } else {
+                // else append
                 return 1;
             }
         });
