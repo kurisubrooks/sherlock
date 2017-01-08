@@ -41,6 +41,16 @@ module.exports = (server, args) => {
     let moment = server.modules.moment;
     let turf = require("@turf/turf");
     let markdown = require("to-markdown");
+    let filter;
+
+    // Region filters
+    if (args.filter)
+        if (args.filter === "debug")
+            filter = require("./filter_debug.json");
+        else if (args.filter === "emergency")
+            filter = require("./filter_emergency.json");
+    else
+        filter = require("./filter_penrith.json");
 
     // Load cached data
     fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
@@ -54,13 +64,6 @@ module.exports = (server, args) => {
         let results = [];
         let sorted = [];
         let radius = 0.025;
-
-        // Region filters
-        let filters = {
-            //emergency: require("./filter_emergency.json"),
-            //debug: require("./filter_debug.json"),
-            local: require("./filter_penrith.json")
-        };
 
         // Formatting function
         let format = (feature) => {
@@ -99,7 +102,7 @@ module.exports = (server, args) => {
         };
 
         // Each filter
-        _.each(filters.local.features, (filterFeature) => {
+        _.each(filter.features, (filterFeature) => {
             let geometry = filterFeature.geometry;
             let filter = geometry.type === "Point" ? turf.circle(geometry, geometry.properties.radius) : geometry;
 
