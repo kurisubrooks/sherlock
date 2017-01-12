@@ -44,13 +44,15 @@ module.exports = (server, args) => {
     let filter;
 
     // Region filters
-    if (args.filter)
-        if (args.filter === "debug")
+    if (args.filter) {
+        if (args.filter === "debug") {
             filter = require("./filter_debug.json");
-        else if (args.filter === "emergency")
+        } else if (args.filter === "emergency") {
             filter = require("./filter_emergency.json");
-    else
+        }
+    } else {
         filter = require("./filter_penrith.json");
+    }
 
     // Load cached data
     fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
