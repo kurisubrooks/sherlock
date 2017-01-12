@@ -3,3 +3,4 @@ node_modules
 keychain.json
 database.json
 storage
+.vscode
