@@ -1,7 +1,8 @@
 const keys = require("./keychain.json");
 
 module.exports = {
-    port: 80,
+    http: 80,
+    https: 443,
     api: {
         aqi: {
             description: "AQI Endpoint"
