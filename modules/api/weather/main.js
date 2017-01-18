@@ -88,7 +88,7 @@ module.exports = (server, body) => {
             },
             weather: {
                 icon: icon_code,
-                image: `http://kurisu.pw/static/weather/icons/${icon_code}_dark.png`,
+                image: `https://api.kurisubrooks.com/static/weather/icons/${icon_code}_dark.png`,
                 condition: data.current_observation.weather,
                 temperature: Number(data.current_observation.temp_c),
                 feels_like: Number(data.current_observation.feelslike_c),
@@ -129,7 +129,7 @@ module.exports = (server, body) => {
                     timezone: object.date.tz_long
                 },
                 icon: icon(object.icon),
-                image: `http://kurisu.pw/static/weather/icons/${icon(object.icon)}_dark.png`,
+                image: `https://api.kurisubrooks.com/static/weather/icons/${icon(object.icon)}_dark.png`,
                 condition: object.conditions,
                 high: Number(object.high.celsius),
                 low: Number(object.low.celsius),
