@@ -15,16 +15,21 @@ const postman = require("body-parser");
 const cors = require("cors");
 const app = express();
 
-const http = require("http").Server(app);
+const privateKey  = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.key"), "utf8");
+const certificate = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.crt"), "utf8");
+const credentials = { key: privateKey, cert: certificate };
+
+const http = require("http");
+const https = require("https");
+const serve1 = http.createServer(app);
+const serve2 = https.createServer(credentials, app);
 const socket = require("socket.io");
-const io = socket(http);
+const io = socket(serve2);
 
 // internal
 const database = require("./database.json");
 const keychain = require("./keychain.json");
 const config = require("./config");
-const sudo = process.getuid && process.getuid() === 0;
-const port = config.port;
 
 // helper functions
 let token = (count) =>
@@ -33,6 +38,25 @@ let token = (count) =>
 let error = (res, err, log) => {
     if (log) console.log(chalk.red(log));
     if (res) res.send({ ok: false, error: err });
+};
+
+let get = (val) => {
+    request(val.url, (err, res, body) => {
+        if (err || res.statusCode !== 200) return;
+        if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) return;
+        if (val.format === "json") body = JSON.parse(body);
+
+        fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
+            ok: true,
+            updated: moment().unix(),
+            data: body
+        }, null, 4), (err) => {
+            if (err) {
+                console.log(chalk.red(`Unable to save ${val.name}.${val.format}`));
+                console.error(err);
+            }
+        });
+    });
 };
 
 let run = (req, res, type, endpoint, data, log) => {
@@ -70,30 +94,11 @@ fs.access(dataStore, fs.F_OK, (err) => {
 
 // start subprocesses
 _.each(config.data, (val) => {
-    let get = (url) => {
-        request(url, (err, res, body) => {
-            if (err || res.statusCode !== 200) return;
-            if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) return;
-            if (val.format === "json") body = JSON.parse(body);
-
-            fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
-                ok: true,
-                updated: moment().unix(),
-                data: body
-            }, null, 4), (err) => {
-                if (err) {
-                    console.log(chalk.red(`Unable to save ${val.name}.${val.format}`));
-                    console.error(err);
-                }
-            });
-        });
-    };
-
-    setInterval(() => get(val.url), val.interval * 60 * 1000);
-    get(val.url);
+    setInterval(() => get(val), val.interval * 60 * 1000);
+    get(val);
 });
 
-// socket
+// websocket
 io.on("connection", (socket) => {
     let ip = (socket.request.connection.remoteAddress).replace("::ffff:", "");
     console.log(chalk.yellow(ip), chalk.green(`Connected to Socket`));
@@ -156,4 +161,5 @@ app.use((err, req, res, next) => {
 app.use((req, res, next) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
 
 // start server
-http.listen(port, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port ${port}`)));
+serve1.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));
+serve2.listen(443, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 443`)));
