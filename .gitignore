@@ -1,6 +1,7 @@
-node_modules
+.vscode
 *.log
 keychain.json
 database.json
+node_modules
 storage
-.vscode
+secure
