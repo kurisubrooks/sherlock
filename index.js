@@ -35,8 +35,7 @@ const config = require("./config");
 let token = (count) =>
     crypto.randomBytes(Math.ceil(count / 2)).toString("hex").slice(0, count);
 
-let error = (res, err, log) => {
-    if (log) console.log(chalk.red(log));
+let error = (res, err) => {
     if (res) res.send({ ok: false, error: err });
 };
 
@@ -59,8 +58,7 @@ let get = (val) => {
     });
 };
 
-let run = (req, res, type, endpoint, data, log) => {
-    if (log) console.log(chalk.green(log));
+let run = (req, res, type, endpoint, data) => {
     try {
         let location = path.join(__dirname, "modules", type, endpoint, "main.js");
         let module = require(location)({
@@ -111,41 +109,60 @@ io.on("connection", (socket) => {
 });
 
 // web server
+app.all("*", (req, res, next) => {
+    let ip = req.ip.replace("::ffff:", "");
+    let data = _.isEmpty(req.body) ? req.query : req.body;
+    let log = `${ip} ${req.params[0]} ${data ? JSON.stringify(data) : ""}`;
+
+    // Handle HTTPS Redirect
+    if (req.secure) {
+        // Set Headers
+        res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+        // Log HTTP Requests
+        console.log(chalk.green(log));
+
+        // Match URL
+        return next();
+    }
+
+    res.redirect(`https://${req.hostname}${req.url}`);
+});
+
 app.all("/api/:path", (req, res) => {
     let data = _.isEmpty(req.body) ? req.query : req.body;
-    let ip = req.ip.replace("::ffff:", "");
 
     if (req.params) {
-        let log = `${ip} ${req.params.path} ${data ? JSON.stringify(data) : ""}`;
         let type;
 
         // module types
-        if (req.params.path in config.api)
+        if (req.params.path in config.api) {
             type = "api";
-        else if (req.params.path in config.generator)
+        } else if (req.params.path in config.generator) {
             type = "generator";
+        }
 
         // endpoint exists
-        if (type)
+        if (type) {
             // check if endpoint requires token
-            if (config[type][req.params.path].token)
-                // check if token was given
-                if (data.token)
+            if (config[type][req.params.path].token) {
+                // check if token was provided
+                if (data.token) {
                     // check if token is valid
-                    if (data.token in database)
-                        run(req, res, type, req.params.path, data, log);
-                    // token is not valid
-                    else
-                        error(res, "invalid token", log);
-                // token was not given
-                else
-                    error(res, "token required", log);
-            // token not required, run
-            else
-                run(req, res, type, req.params.path, data, log);
-        // endpoint doesn't exist
-        else
-            error(res, "endpoint doesn't exist", log);
+                    if (data.token in database) {
+                        run(req, res, type, req.params.path, data);
+                    } else {
+                        error(res, "invalid token");
+                    }
+                } else {
+                    error(res, "token required");
+                }
+            } else {
+                run(req, res, type, req.params.path, data);
+            }
+        } else {
+            error(res, "endpoint doesn't exist");
+        }
     }
 });
 
