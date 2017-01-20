@@ -12,7 +12,7 @@ module.exports = (server, data) => {
     let _ = server.modules.lodash;
 
     let frames = 8;
-    let list = { adelaide: "064", sydney: "071" };
+    let list = { adelaide: ["064", "radar"], sydney: ["071", "radarz"] };
     let types = [ "animated", "static" ];
     let type = data.type ? data.type : "static";
     let id = data.id ? data.id : list.sydney;
@@ -29,7 +29,7 @@ module.exports = (server, data) => {
             res.status(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
             return;
         } else {
-            id = list[data.id];
+            id = list[data.id][0];
         }
     }
 
@@ -38,7 +38,7 @@ module.exports = (server, data) => {
         "lc": id,
         "type": "radar",
         "mt": "radsat_640",
-        "mlt": "radarz",
+        "mlt": list[data.id][1],
         "mlc": id,
         "frames": frames,
         "md": "640x480",
