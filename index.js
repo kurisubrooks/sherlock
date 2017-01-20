@@ -41,8 +41,18 @@ let error = (res, err) => {
 
 let get = (val) => {
     request(val.url, (err, res, body) => {
-        if (err || res.statusCode !== 200) return;
-        if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) return;
+        if (err || res.statusCode !== 200) {
+            console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval * 60 * 1000} minutes`);
+            console.error(err || res.statusCode);
+            return;
+        }
+
+        if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) {
+            console.info(`Result from ${val.name} was undefined`);
+            console.info(body);
+            return;
+        }
+
         if (val.format === "json") body = JSON.parse(body);
 
         fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
@@ -51,7 +61,7 @@ let get = (val) => {
             data: body
         }, null, 4), (err) => {
             if (err) {
-                console.log(chalk.red(`Unable to save ${val.name}.${val.format}`));
+                console.error(chalk.red(`Unable to save ${val.name}.${val.format}`));
                 console.error(err);
             }
         });
