@@ -19,17 +19,22 @@ const privateKey  = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubr
 const certificate = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.crt"), "utf8");
 const credentials = { key: privateKey, cert: certificate };
 
-const http = require("http");
-const https = require("https");
-const serve1 = http.createServer(app);
-const serve2 = https.createServer(credentials, app);
+const http = require("http").createServer(app);
+const https = require("https").createServer(credentials, app);
 const socket = require("socket.io");
-const io = socket(serve2);
+const io = socket(https);
 
 // internal
 const database = require("./database.json");
 const keychain = require("./keychain.json");
 const config = require("./config");
+
+// config express
+app.use(cors());
+app.use(postman.json());
+app.use(postman.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use("/static", express.static("static"));
 
 // helper functions
 let token = (count) =>
@@ -73,25 +78,14 @@ let run = (req, res, type, endpoint, data) => {
         let location = path.join(__dirname, "modules", type, endpoint, "main.js");
         let module = require(location)({
             storage: path.join(__dirname, "storage"),
-            req: req,
-            res: res,
-            io: io,
-            keychain: keychain,
+            req: req, res: res, io: io, keychain: keychain,
             modules: { fs: fs, path: path, lodash: _, moment: moment, request: request, crypto: crypto, chalk: chalk }
         }, data);
     } catch(error) {
-        console.log(chalk.red(error));
+        console.error(error);
         res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-        return;
     }
 };
-
-// express config
-app.use(cors());
-app.use(postman.json());
-app.use(postman.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use("/static", express.static("static"));
 
 // subprocess data handler & setup
 let dataStore = path.join(__dirname, "storage");
@@ -100,7 +94,7 @@ fs.access(dataStore, fs.F_OK, (err) => {
     if (err) fs.mkdirSync(dataStore);
 });
 
-// start subprocesses
+// start data-getters
 _.each(config.data, (val) => {
     setInterval(() => get(val), val.interval * 60 * 1000);
     get(val);
@@ -109,10 +103,10 @@ _.each(config.data, (val) => {
 // websocket
 io.on("connection", (socket) => {
     let ip = (socket.request.connection.remoteAddress).replace("::ffff:", "");
+
     console.log(chalk.yellow(ip), chalk.green(`Connected to Socket`));
 
     socket.on("ping", () => socket.emit("pong"));
-
     socket.on("disconnect", () => {
         console.log(chalk.yellow(ip), chalk.red(`Disconnected from Socket`));
     });
@@ -129,7 +123,7 @@ app.all("*", (req, res, next) => {
         // Set Headers
         res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
 
-        // Log HTTP Requests
+        // Log HTTP Request
         console.log(chalk.green(log));
 
         // Match URL
@@ -188,5 +182,5 @@ app.use((err, req, res, next) => {
 app.use((req, res, next) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
 
 // start server
-serve1.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));
-serve2.listen(443, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 443`)));
+http.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));
+https.listen(443, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 443`)));
