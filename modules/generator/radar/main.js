@@ -11,11 +11,21 @@ module.exports = (server, data) => {
     let fs = server.modules.fs;
     let _ = server.modules.lodash;
 
-    let frames = 8;
-    let list = { adelaide: ["064", "radar"], sydney: ["071", "radarz"] };
+    let frames = data.frames ? Number(data.frames) : 8;
+    let list = {
+        adelaide: { id: "064", type: "radar", tz: "Australia/Adelaide" },
+        sydney: { id: "071", type: "radarz", tz: "Australia/Sydney" }
+    };
     let types = [ "animated", "static" ];
     let type = data.type ? data.type : "static";
-    let id = data.id ? data.id : list.sydney;
+    let place = data.id ? list[data.id] : list.sydney;
+
+    if (data.frames) {
+        if (data.frames > 18) {
+            res.status(400).send({ ok: false, code: 400, error: "maximum of 18 frames allowed" });
+            return;
+        }
+    }
 
     if (data.type) {
         if (!types[types.indexOf(data.type)]) {
@@ -25,26 +35,28 @@ module.exports = (server, data) => {
     }
 
     if (data.id) {
-        if (!list[data.id]) {
+        if (!place) {
             res.status(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
             return;
-        } else {
-            id = list[data.id][0];
         }
+    }
+
+    if (type === "static") {
+        frames = 1;
     }
 
     let url = `http://data.weatherzone.com.au/json/animator/?` + qs.stringify({
         "lt": "radar",
-        "lc": id,
+        "lc": place.id,
         "type": "radar",
         "mt": "radsat_640",
-        "mlt": list[data.id][1],
-        "mlc": id,
+        "mlt": place.type,
+        "mlc": place.id,
         "frames": frames,
         "md": "640x480",
         "radardimensions": "640x480",
         "df": "EEE HH:mm z",
-        "tz": "Australia/Sydney"
+        "tz": place.tz
     }, { indices: false });
 
     request.get({ url: url, json: true }, (err, response, data) => {
@@ -58,8 +70,8 @@ module.exports = (server, data) => {
         const terrain = new Image();
         const locations = new Image();
 
-        terrain.src = fs.readFileSync(path.join(__dirname, "terrain", id + ".jpg"));
-        locations.src = fs.readFileSync(path.join(__dirname, "locations", id + ".png"));
+        terrain.src = fs.readFileSync(path.join(__dirname, "terrain", place.id + ".jpg"));
+        locations.src = fs.readFileSync(path.join(__dirname, "locations", place.id + ".png"));
 
         if (type === "animated") {
             encoder.start();
