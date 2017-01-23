@@ -1,11 +1,10 @@
 "use strict";
 
-const request = require("request");
-
 module.exports = (server, args) => {
     let req = server.req;
     let res = server.res;
     let socket = server.io;
+    let request = server.modules.request;
 
     if (!args.id) args.id = "3255";
 

@@ -9,7 +9,7 @@ module.exports = (server, data) => {
     let request = server.modules.request;
     let path = server.modules.path;
     let fs = server.modules.fs;
-    let _ = server.modules.lodash;
+    let _ = server.modules._;
 
     let frames = data.frames ? Number(data.frames) : 8;
     let list = {

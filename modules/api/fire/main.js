@@ -35,7 +35,7 @@ let removeEvents = [
 
 module.exports = (server, args) => {
     let res = server.res;
-    let _ = server.modules.lodash;
+    let _ = server.modules._;
     let fs = server.modules.fs;
     let path = server.modules.path;
     let moment = server.modules.moment;
