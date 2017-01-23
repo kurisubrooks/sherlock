@@ -48,14 +48,12 @@ let get = (val) => {
     request(val.url, (err, res, body) => {
         if (err || res.statusCode !== 200) {
             console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval * 60 * 1000} minutes`);
-            console.error(err || res.statusCode);
-            return;
+            return console.error(err || res.statusCode);
         }
 
         if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) {
             console.info(`Result from ${val.name} was undefined`);
-            console.info(body);
-            return;
+            return console.info(body);
         }
 
         if (val.format === "json") body = JSON.parse(body);
@@ -78,12 +76,23 @@ let run = (req, res, type, endpoint, data) => {
         let location = path.join(__dirname, "modules", type, endpoint, "main.js");
         let module = require(location)({
             storage: path.join(__dirname, "storage"),
-            req: req, res: res, io: io, keychain: keychain,
-            modules: { fs: fs, path: path, lodash: _, moment: moment, request: request, crypto: crypto, chalk: chalk }
+            req,
+            res,
+            io,
+            keychain,
+            modules: {
+                _,
+                fs,
+                path,
+                moment,
+                request,
+                crypto,
+                chalk
+            }
         }, data);
     } catch(error) {
         console.error(error);
-        res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+        return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
     }
 };
 
@@ -146,27 +155,27 @@ app.all("/api/:path", (req, res) => {
             type = "generator";
         }
 
-        // endpoint exists
-        if (type) {
-            // check if endpoint requires token
-            if (config[type][req.params.path].token) {
-                // check if token was provided
-                if (data.token) {
-                    // check if token is valid
-                    if (data.token in database) {
-                        run(req, res, type, req.params.path, data);
-                    } else {
-                        error(res, "invalid token");
-                    }
-                } else {
-                    error(res, "token required");
-                }
-            } else {
-                run(req, res, type, req.params.path, data);
-            }
-        } else {
-            error(res, "endpoint doesn't exist");
+        // check if doesn't endpoint exist
+        if (!type) {
+            return error(res, "endpoint doesn't exist");
         }
+
+        // if token not required
+        if (!config[type][req.params.path].token) {
+            return run(req, res, type, req.params.path, data);
+        }
+
+        // token missing
+        if (!data.token) {
+            return error(res, "token required");
+        }
+
+        // invalid token
+        if (!(data.token in database)) {
+            return error(res, "invalid token");
+        }
+
+        run(req, res, type, req.params.path, data);
     }
 });
 
