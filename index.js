@@ -45,7 +45,7 @@ let error = (res, err) => {
 let get = val => {
     request(val.url, (err, res, body) => {
         if (err || res.statusCode !== 200) {
-            console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval * 60 * 1000} minutes`);
+            console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval} minutes`);
             return console.error(err || res.statusCode);
         }
 
