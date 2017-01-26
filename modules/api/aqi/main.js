@@ -10,17 +10,17 @@ module.exports = (server, args) => {
 
     let fetch = {
         headers: { "User-Agent": "Mozilla/5.0" },
-        url: `https://waqi.info/api/widget/${args.id}/widget.v1.json`
+        url: `http://waqi.info/api/widget/${args.id}/widget.v1.json`
     };
 
     request.get(fetch, (error, response, body) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
             return error;
         } else if (response.statusCode !== 200) {
             console.error(error);
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
             return response.statusCode;
         }
 
@@ -88,7 +88,7 @@ module.exports = (server, args) => {
                 }
             });
         } else {
-            res.status(504).send({ ok: false, code: 504, error: "request timed out", debug: sauce });
+            res.status(504).send({ ok: false, code: 503, error: "Service Unavailable" });
             return;
         }
     });

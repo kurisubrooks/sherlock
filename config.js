@@ -32,7 +32,7 @@ module.exports = {
         aqi: {
             name: "aqi",
             format: "json",
-            url: "https://waqi.info/api/widget/3255/widget.v1.json",
+            url: "http://waqi.info/api/widget/3255/widget.v1.json",
             interval: 10
         },
         fire: {
