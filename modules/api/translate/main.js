@@ -14,7 +14,7 @@ let validate = (query) => {
         }
     });
 
-    return !found ? null : match;
+    return found ? match : null;
 };
 
 module.exports = (server, body) => {
