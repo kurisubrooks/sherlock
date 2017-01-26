@@ -12,7 +12,6 @@ const _ = require("lodash");
 // server
 const express = require("express");
 const postman = require("body-parser");
-const cors = require("cors");
 const app = express();
 
 const privateKey  = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.key"), "utf8");
@@ -30,21 +29,20 @@ const keychain = require("./keychain.json");
 const config = require("./config");
 
 // config express
-app.use(cors());
 app.use(postman.json());
 app.use(postman.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use("/static", express.static("static"));
 
 // helper functions
-let token = (count) =>
+let token = count =>
     crypto.randomBytes(Math.ceil(count / 2)).toString("hex").slice(0, count);
 
 let error = (res, err) => {
     if (res) res.send({ ok: false, error: err });
 };
 
-let get = (val) => {
+let get = val => {
     request(val.url, (err, res, body) => {
         if (err || res.statusCode !== 200) {
             console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval * 60 * 1000} minutes`);
@@ -99,18 +97,18 @@ let run = (req, res, type, endpoint, data) => {
 // subprocess data handler & setup
 let dataStore = path.join(__dirname, "storage");
 
-fs.access(dataStore, fs.F_OK, (err) => {
+fs.access(dataStore, fs.F_OK, err => {
     if (err) fs.mkdirSync(dataStore);
 });
 
 // start data-getters
-_.each(config.data, (val) => {
+_.each(config.data, val => {
     setInterval(() => get(val), val.interval * 60 * 1000);
     get(val);
 });
 
 // websocket
-io.on("connection", (socket) => {
+io.on("connection", socket => {
     let ip = (socket.request.connection.remoteAddress).replace("::ffff:", "");
 
     console.log(chalk.yellow(ip), chalk.green(`Connected to Socket`));
@@ -131,6 +129,7 @@ app.all("*", (req, res, next) => {
     if (req.secure) {
         // Set Headers
         res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+        res.set("Access-Control-Allow-Origin", "*");
 
         // Log HTTP Request
         console.log(chalk.green(log));
