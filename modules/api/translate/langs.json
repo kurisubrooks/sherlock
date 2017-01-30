@@ -1,4 +1,4 @@
-module.exports = [
+[
     {
         "name": "Afrikaans",
         "local": "Afrikaans",
@@ -189,4 +189,4 @@ module.exports = [
         "local": "Cymraeg",
         "code": "cy"
     }
-];
+]
