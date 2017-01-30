@@ -14,7 +14,7 @@ const express = require("express");
 const postman = require("body-parser");
 const app = express();
 
-const privateKey  = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.key"), "utf8");
+const privateKey = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.key"), "utf8");
 const certificate = fs.readFileSync(path.join(__dirname, "secure", "api.kurisubrooks.com.crt"), "utf8");
 const credentials = { key: privateKey, cert: certificate };
 
@@ -49,14 +49,14 @@ let get = val => {
             return console.error(err || res.statusCode);
         }
 
-        if (body === undefined || body === null || body === void 0 || body === "" || body === "{}" || body === {}) {
+        if (!body || body === undefined || body === null || body === "" || body === "{}" || body === {}) {
             console.info(`Result from ${val.name} was undefined`);
             return console.info(body);
         }
 
         if (val.format === "json") body = JSON.parse(body);
 
-        fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
+        return fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
             ok: true,
             updated: moment().unix(),
             data: body
@@ -72,7 +72,7 @@ let get = val => {
 let run = (req, res, type, endpoint, data) => {
     try {
         let location = path.join(__dirname, "modules", type, endpoint, "main.js");
-        let module = require(location)({
+        return require(location)({
             storage: path.join(__dirname, "storage"),
             req,
             res,
@@ -109,7 +109,7 @@ _.each(config.data, val => {
 
 // websocket
 io.on("connection", socket => {
-    let ip = (socket.request.connection.remoteAddress).replace("::ffff:", "");
+    let ip = socket.request.connection.remoteAddress.replace("::ffff:", "");
 
     console.log(chalk.yellow(ip), chalk.green(`Connected to Socket`));
 
@@ -138,7 +138,7 @@ app.all("*", (req, res, next) => {
         return next();
     }
 
-    res.redirect(`https://${req.hostname}${req.url}`);
+    return res.redirect(`https://${req.hostname}${req.url}`);
 });
 
 app.all("/api/:path", (req, res) => {
@@ -174,20 +174,22 @@ app.all("/api/:path", (req, res) => {
             return error(res, "invalid token");
         }
 
-        run(req, res, type, req.params.path, data);
+        return run(req, res, type, req.params.path, data);
     }
+
+    return null;
 });
 
 app.all("/api*", (req, res) => res.send({ ok: false, error: "missing endpoint" }));
 
 // err handling
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     console.error(err.stack);
-    res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+    return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
 });
 
 // 404
-app.use((req, res, next) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
+app.use((req, res) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
 
 // start server
 http.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));

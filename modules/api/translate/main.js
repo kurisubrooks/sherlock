@@ -1,18 +1,17 @@
 "use strict";
 
-const langs = require("./langs");
+const langs = require("./langs.json");
 const qs = require("qs");
 
-let validate = (query) => {
+let validate = query => {
     let found = false;
     let match = {};
 
-    langs.forEach((v, k) => {
-        if (query.toLowerCase() === v.code) {
-            found = true;
-            match = v;
-        }
-    });
+    for (let item of langs) {
+        if (query.toLowerCase() !== item.code) continue;
+        found = true;
+        match = item;
+    }
 
     return found ? match : null;
 };
@@ -35,21 +34,18 @@ module.exports = (server, body) => {
     };
 
     if (!body.query) {
-        res.send({ ok: false, error: "missing fields" });
-        return;
+        return res.send({ ok: false, error: "missing fields" });
     }
 
     if (body.to) {
         if (!validate(body.to)) {
-            res.send({ ok: false, error: "unknown language in 'to' field" });
-            return;
+            return res.send({ ok: false, error: "unknown language in 'to' field" });
         }
     }
 
     if (body.from) {
         if (!validate(body.from)) {
-            res.send({ ok: false, error: "unknown language in 'from' field" });
-            return;
+            return res.send({ ok: false, error: "unknown language in 'from' field" });
         }
     }
 
@@ -70,15 +66,15 @@ module.exports = (server, body) => {
 
     request.get(fetch, (error, response, result) => {
         if (error) {
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-            return error;
+            console.error(error);
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         } else if (response.statusCode !== 200) {
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-            return response.statusCode;
+            console.error(response.statusCode);
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         try {
-            let data = JSON.parse(result.replace(/\,+/g, ","));
+            let data = JSON.parse(result.replace(/,+/g, ","));
             let to = validate(body.to ? body.to : "en");
             let from = validate(data[1]);
             let query = body.query;
@@ -92,11 +88,12 @@ module.exports = (server, body) => {
                 result: translation
             });
 
-            return;
-        } catch(e) {
-            console.error(e);
-            res.send({ ok: false, error: "bad response" });
-            return;
+            return null;
+        } catch(err) {
+            console.error(err);
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
     });
+
+    return null;
 };
