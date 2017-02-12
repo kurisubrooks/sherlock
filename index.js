@@ -88,7 +88,8 @@ fs.access(dataStore, fs.F_OK, err => {
 });
 
 // start data-getters
-for (let val of config.data) {
+for (let key of Object.keys(config.data)) {
+    let val = config.data[key];
     setInterval(() => get(val), val.interval * 60 * 1000);
     get(val);
 }
