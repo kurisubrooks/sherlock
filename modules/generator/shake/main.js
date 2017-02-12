@@ -1,5 +1,3 @@
-"use strict";
-
 const epicenters = require("./epicenters.json");
 const request = require("request");
 const Canvas = require("canvas");
@@ -15,9 +13,8 @@ module.exports = (server, data) => {
 
     try {
         data = JSON.parse(Buffer.from(data.data, "base64").toString());
-    } catch(e) {
-        res.send({ ok: false, error: "malformed data" });
-        return;
+    } catch(err) {
+        return res.status(400).send({ ok: false, code: 400, error: "malformed data" });
     }
 
     let location = data.l;
@@ -27,11 +24,10 @@ module.exports = (server, data) => {
     let depth = Number(data.d);
 
     if (!(location && epicenter && magnitude && seismic && depth)) {
-        res.send({ ok: false, error: "missing params" });
-        return;
+        return res.send({ ok: false, error: "missing params" });
     }
 
-    let url = `https://maps.googleapis.com/maps/api/staticmap?` + qs.stringify({
+    let options = qs.stringify({
         size: "386x159",
         center: location.join(","),
         format: "png",
@@ -48,34 +44,28 @@ module.exports = (server, data) => {
         ]
     }, { indices: false });
 
-    request.get({ url: url, encoding: "binary" }, (error, response, body) => {
-        if (error) {
-            throw error;
-        } else if (response.statusCode !== 200) {
-            throw response.statusCode;
-        }
+    let url = `https://maps.googleapis.com/maps/api/staticmap?${options}`;
+
+    return request.get({ url: url, encoding: "binary" }, (err, response, body) => {
+        if (err) throw err;
 
         let canvas = new Canvas(400, 280);
         let ctx = canvas.getContext("2d");
-
         let Image = Canvas.Image;
         let Font = Canvas.Font;
-
+        let map = new Image();
+        let base = new Image();
+        let epic = new Image();
         let Roboto = new Font("Roboto", path.join(__dirname, "Roboto.ttf"));
 
-        let map = new Image();
-            map.src = new Buffer(body, "binary");
-
-        let base = new Image();
-            base.src = fs.readFileSync(path.join(__dirname, "card.png"));
-
-        let epi = new Image();
-            epi.src = fs.readFileSync(path.join(__dirname, "epicenter.png"));
+        map.src = new Buffer(body, "binary");
+        base.src = fs.readFileSync(path.join(__dirname, "card.png"));
+        epic.src = fs.readFileSync(path.join(__dirname, "epicenter.png"));
 
         // Draw Image
         ctx.drawImage(base, 0, 0);
         ctx.drawImage(map, 7, 73);
-        ctx.drawImage(epi, 386 / 2 - (28 / 2) + 7, 159 / 2 - (28 / 2) + 73);
+        ctx.drawImage(epic, 386 / 2 - (28 / 2) + 7, 159 / 2 - (28 / 2) + 73);
         ctx.scale(1, 1);
         ctx.patternQuality = "bilinear";
         ctx.filter = "bilinear";
@@ -97,6 +87,6 @@ module.exports = (server, data) => {
         ctx.fillText("Information is preliminary", 56, 257);
 
         res.type("png");
-        res.end(canvas.toBuffer());
+        return res.end(canvas.toBuffer());
     });
 };

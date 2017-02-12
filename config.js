@@ -4,29 +4,15 @@ module.exports = {
     http: 80,
     https: 443,
     api: {
-        aqi: {
-            description: "AQI Endpoint"
-        },
-        fire: {
-            description: "Fires in/around Penrith"
-        },
-        ping: {
-            description: "Server Ping"
-        },
-        translate: {
-            description: "Google Translate"
-        },
-        weather: {
-            description: "Weather Endpoint"
-        }
+        aqi: { description: "AQI Endpoint" },
+        fire: { description: "Fires in/around Penrith" },
+        ping: { description: "Server Ping" },
+        translate: { description: "Google Translate" },
+        weather: { description: "Weather Endpoint" }
     },
     generator: {
-        shake: {
-            description: "Shake Endpoint"
-        },
-        radar: {
-            description: "Radar"
-        }
+        shake: { description: "Shake Endpoint" },
+        radar: { description: "Radar" }
     },
     data: {
         aqi: {

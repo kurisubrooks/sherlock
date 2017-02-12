@@ -1,10 +1,6 @@
-"use strict";
-
 module.exports = (server, args) => {
-    let req = server.req;
     let res = server.res;
-    let socket = server.io;
-    let request = server.modules.request;
+    let { request } = server.modules;
 
     if (!args.id) args.id = "3255";
 
@@ -16,12 +12,10 @@ module.exports = (server, args) => {
     request.get(fetch, (error, response, body) => {
         if (error) {
             console.error(error);
-            res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
-            return error;
+            return res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
         } else if (response.statusCode !== 200) {
             console.error(error);
-            res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
-            return response.statusCode;
+            return res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
         }
 
         let init, sauce;
@@ -29,10 +23,9 @@ module.exports = (server, args) => {
         try {
             init = JSON.parse(body);
             sauce = init.rxs.obs[0].msg;
-        } catch(e) {
-            console.error(e);
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-            return e;
+        } catch(err) {
+            console.error(err);
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         if (sauce) {
@@ -74,7 +67,7 @@ module.exports = (server, args) => {
                 data.style = "#444444";
             }
 
-            res.send({
+            return res.send({
                 ok: true,
                 location: {
                     id: Number(args.id),
@@ -88,8 +81,7 @@ module.exports = (server, args) => {
                 }
             });
         } else {
-            res.status(504).send({ ok: false, code: 503, error: "Service Unavailable" });
-            return;
+            return res.status(504).send({ ok: false, code: 503, error: "Service Unavailable" });
         }
     });
 };

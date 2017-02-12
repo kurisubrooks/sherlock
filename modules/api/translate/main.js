@@ -1,5 +1,3 @@
-"use strict";
-
 const langs = require("./langs.json");
 const qs = require("qs");
 
@@ -18,7 +16,7 @@ let validate = query => {
 
 module.exports = (server, body) => {
     let res = server.res;
-    let request = server.modules.request;
+    let { request } = server.modules;
 
     let url = "http://translate.googleapis.com/translate_a/single?";
 
@@ -64,7 +62,7 @@ module.exports = (server, body) => {
         })
     };
 
-    request.get(fetch, (error, response, result) => {
+    return request.get(fetch, (error, response, result) => {
         if (error) {
             console.error(error);
             return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
@@ -80,20 +78,16 @@ module.exports = (server, body) => {
             let query = body.query;
             let translation = data[0][0][0];
 
-            res.send({
+            return res.send({
                 ok: true,
                 to: to,
                 from: from,
                 query: query,
                 result: translation
             });
-
-            return null;
         } catch(err) {
             console.error(err);
             return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
     });
-
-    return null;
 };

@@ -1,43 +1,35 @@
-"use strict";
-
 const GIF = require("gifencoder");
 const Canvas = require("canvas");
 const qs = require("qs");
 
 module.exports = (server, data) => {
     let res = server.res;
-    let request = server.modules.request;
-    let path = server.modules.path;
-    let fs = server.modules.fs;
-    let _ = server.modules._;
+    let { fs, path, request } = server.modules;
 
     let frames = data.frames ? Number(data.frames) : 8;
     let list = {
         adelaide: { id: "064", type: "radar", tz: "Australia/Adelaide" },
         sydney: { id: "071", type: "radarz", tz: "Australia/Sydney" }
     };
-    let types = [ "animated", "static" ];
+    let types = ["animated", "static"];
     let type = data.type ? data.type : "static";
     let place = data.id ? list[data.id] : list.sydney;
 
     if (data.frames) {
         if (data.frames > 18) {
-            res.status(400).send({ ok: false, code: 400, error: "maximum of 18 frames allowed" });
-            return;
+            return res.status(400).send({ ok: false, code: 400, error: "maximum of 18 frames allowed" });
         }
     }
 
     if (data.type) {
         if (!types[types.indexOf(data.type)]) {
-            res.status(400).send({ ok: false, code: 400, error: "unknown image type" });
-            return;
+            return res.status(400).send({ ok: false, code: 400, error: "unknown image type" });
         }
     }
 
     if (data.id) {
         if (!place) {
-            res.status(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
-            return;
+            return res.status(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
         }
     }
 
@@ -45,7 +37,7 @@ module.exports = (server, data) => {
         frames = 1;
     }
 
-    let url = `http://data.weatherzone.com.au/json/animator/?` + qs.stringify({
+    let options = qs.stringify({
         "lt": "radar",
         "lc": place.id,
         "type": "radar",
@@ -59,7 +51,9 @@ module.exports = (server, data) => {
         "tz": place.tz
     }, { indices: false });
 
-    request.get({ url: url, json: true }, (err, response, data) => {
+    let url = `http://data.weatherzone.com.au/json/animator/?${options}`;
+
+    return request.get({ url: url, json: true }, (err, response, data) => {
         if (err) throw err;
 
         const encoder = new GIF(640, 480);
@@ -70,42 +64,37 @@ module.exports = (server, data) => {
         const terrain = new Image();
         const locations = new Image();
 
-        terrain.src = fs.readFileSync(path.join(__dirname, "terrain", place.id + ".jpg"));
-        locations.src = fs.readFileSync(path.join(__dirname, "locations", place.id + ".png"));
+        terrain.src = fs.readFileSync(path.join(__dirname, "terrain", `${place.id}.jpg`));
+        locations.src = fs.readFileSync(path.join(__dirname, "locations", `${place.id}.png`));
 
         if (type === "animated") {
             encoder.start();
-            encoder.setRepeat(0);    // 0 for repeat, -1 for no-repeat
-            encoder.setDelay(220);   // frame delay in ms
-            encoder.setQuality(100); // image quality. 10 is default.
+            encoder.setRepeat(0);
+            encoder.setDelay(220);
+            encoder.setQuality(100);
 
             let count = 0;
             let frames = { };
-            let requestQueue = [ ];
+            let requestQueue = [];
 
             data.frames.sort((a, b) => a - b);
 
-            _.forEach(data.frames, (i) => {
+            for (let i of data.frames) {
                 let id = ++count;
 
-                //console.log(`GET #${id} - ${i.timestamp_string}`);
-
-                requestQueue.push(new Promise((resolve, reject) => {
+                requestQueue.push(new Promise(resolve => {
                     request.get({ url: i.image, encoding: null }, (err, res, body) => {
                         if (err) throw err;
 
                         frames[id] = { radar: body, id: id, i: i };
-                        //console.log(`IMG #${id} - ${i.timestamp_string}`);
 
-                        resolve();
+                        return resolve();
                     });
                 }));
-            });
+            }
 
-            Promise.all(requestQueue).then(() => {
-                //console.log(`Got ${requestQueue.length} frames total`);
-
-                _.forEach(frames, (thisFrame) => {
+            return Promise.all(requestQueue).then(() => {
+                for (let thisFrame of frames) {
                     frame.src = thisFrame.radar;
 
                     ctx.drawImage(terrain, 0, 0);
@@ -114,18 +103,16 @@ module.exports = (server, data) => {
                     ctx.font = "16px sans-serif";
                     ctx.fillText(thisFrame.id, 628, 15);
 
-                    //console.log(`ADD #${thisFrame.id} - ${thisFrame.i.timestamp_string}`);
-
                     if (thisFrame.id === count) encoder.setDelay(2250);
                     encoder.addFrame(ctx);
-                });
+                }
 
                 encoder.finish();
                 res.type("gif");
-                res.end(encoder.out.getData());
+                return res.end(encoder.out.getData());
             });
-        } else {
-            request.get({ url: data.frames[Number(frames) - 1].image, encoding: null }, (err, resp, body) => {
+        } else if (type === "static") {
+            return request.get({ url: data.frames[Number(frames) - 1].image, encoding: null }, (err, resp, body) => {
                 if (err) throw err;
 
                 frame.src = body;
@@ -135,8 +122,10 @@ module.exports = (server, data) => {
                 ctx.drawImage(locations, 0, 0);
 
                 res.type("png");
-                res.send(canvas.toBuffer());
+                return res.send(canvas.toBuffer());
             });
+        } else {
+            return res.status(400).send({ ok: false, code: 400, error: "unknown type" });
         }
     });
 };

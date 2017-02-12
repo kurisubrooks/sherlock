@@ -1,5 +1,3 @@
-"use strict";
-
 let alertLevels = [
     "Not Applicable",
     "Advice",
@@ -35,10 +33,7 @@ let removeEvents = [
 
 module.exports = (server, args) => {
     let res = server.res;
-    let _ = server.modules._;
-    let fs = server.modules.fs;
-    let path = server.modules.path;
-    let moment = server.modules.moment;
+    let { fs, path } = server.modules;
     let turf = require("@turf/turf");
     let markdown = require("to-markdown");
     let filter;
@@ -55,7 +50,7 @@ module.exports = (server, args) => {
     }
 
     // Load cached data
-    fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
+    return fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
         if (error) {
             console.error(error);
             res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
@@ -64,27 +59,25 @@ module.exports = (server, args) => {
 
         let incidents = JSON.parse(body).data;
         let results = [];
-        let sorted = [];
         let radius = 0.025;
 
         // Formatting function
         let format = (feature) => {
             let properties = feature.properties;
-            let name = properties.title;
             let description = markdown(properties.description).split("\n");
             let formatted = { };
             let final = { };
 
             // Split Original String into Parsable Object
-            _.each(description, (i) => {
+            for (let i of description) {
                 description[i] = i.split(/:(.+)?/);
                 description[i].splice(2, 1);
                 description[i][1] = description[i][1].trim();
                 formatted[description[i][0]] = description[i][1];
-            });
+            }
 
             // if Level "Not Applicable" && Matches Blacklist, Remove
-            if (alertLevels.indexOf(properties.category) === 0 && removeEvents.indexOf(formatted.TYPE) >= 0) return;
+            if (alertLevels.indexOf(properties.category) === 0 && removeEvents.includes(formatted.TYPE)) return;
 
             // Format Data
             final.title = properties.title.trim();
@@ -94,9 +87,10 @@ module.exports = (server, args) => {
             final.category = properties.category;
             final.location = formatted.LOCATION;
             final.status = formatted.STATUS;
-            final.fire = formatted.FIRE === "Yes" ? true : false;
             final.size = Number(formatted.SIZE.replace(" ha", ""));
-            final.updated = Date.parse(formatted.UPDATED);
+            final.updated = { };
+            final.updated.unix = Date.parse(formatted.UPDATED);
+            final.updated.timestamp = Date.parse(formatted.UPDATED);
             final.geojson = feature;
             final.geojson.properties = { };
 
@@ -104,12 +98,12 @@ module.exports = (server, args) => {
         };
 
         // Each filter
-        _.each(filter.features, (filterFeature) => {
+        for (let filterFeature of filter.features) {
             let geometry = filterFeature.geometry;
             let filter = geometry.type === "Point" ? turf.circle(geometry, geometry.properties.radius) : geometry;
 
             // Each incident
-            _.each(incidents.features, (feature) => {
+            for (let feature of incidents.features) {
                 let geometry = feature.geometry;
 
                 // filter results to overlapping regions
@@ -117,13 +111,13 @@ module.exports = (server, args) => {
 
                 // if match
                 if (result !== undefined) format(feature);
-            });
-        });
+            }
+        }
 
         // Sort results by HIGH→LOW warning levels
         // then sort by Distance from Home
         results.sort((a, b) => {
-            let home = ["-33.745843", "150.712301"];
+            let home = ["-33.746", "150.7123"];
 
             if (a.level > b.level) {
                 // if a's level is higher than b's, prepend
@@ -150,7 +144,7 @@ module.exports = (server, args) => {
                 }
 
                 // sort by distance
-                if (Math.abs(Math.sqrt(Math.pow((a_lat - home[0]), 2) + Math.pow((a_long - home[1]), 2))) < Math.abs(Math.sqrt(Math.pow((b_lat - home[0]), 2) + Math.pow((b_long - home[1]), 2)))) {
+                if (Math.abs(Math.sqrt(Math.pow(a_lat - home[0], 2) + Math.pow(a_long - home[1], 2))) < Math.abs(Math.sqrt(Math.pow(b_lat - home[0], 2) + Math.pow(b_long - home[1], 2)))) {
                     return -1;
                 } else {
                     return 1;
@@ -162,7 +156,7 @@ module.exports = (server, args) => {
         });
 
         // Serve Data
-        res.send({
+        return res.send({
             ok: true,
             total: incidents.features.length,
             search: results.length,

@@ -1,5 +1,3 @@
-"use strict";
-
 // modules
 const request = require("request");
 const moment = require("moment");
@@ -7,7 +5,6 @@ const crypto = require("crypto");
 const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs");
-const _ = require("lodash");
 
 // server
 const express = require("express");
@@ -74,19 +71,8 @@ let run = (req, res, type, endpoint, data) => {
         let location = path.join(__dirname, "modules", type, endpoint, "main.js");
         return require(location)({
             storage: path.join(__dirname, "storage"),
-            req,
-            res,
-            io,
-            keychain,
-            modules: {
-                _,
-                fs,
-                path,
-                moment,
-                request,
-                crypto,
-                chalk
-            }
+            req, res, io, keychain,
+            modules: { fs, path, moment, request, crypto, chalk }
         }, data);
     } catch(error) {
         console.error(error);
@@ -102,10 +88,10 @@ fs.access(dataStore, fs.F_OK, err => {
 });
 
 // start data-getters
-_.each(config.data, val => {
+for (let val of config.data) {
     setInterval(() => get(val), val.interval * 60 * 1000);
     get(val);
-});
+}
 
 // websocket
 io.on("connection", socket => {
@@ -122,7 +108,7 @@ io.on("connection", socket => {
 // web server
 app.all("*", (req, res, next) => {
     let ip = req.ip.replace("::ffff:", "");
-    let data = _.isEmpty(req.body) ? req.query : req.body;
+    let data = Object.keys(req.body).size ? req.body : req.query;
     let log = `${ip} ${req.params[0]} ${data ? JSON.stringify(data) : ""}`;
 
     // Handle HTTPS Redirect
@@ -142,7 +128,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.all("/api/:path", (req, res) => {
-    let data = _.isEmpty(req.body) ? req.query : req.body;
+    let data = Object.keys(req.body).size ? req.body : req.query;
 
     if (req.params) {
         let type;

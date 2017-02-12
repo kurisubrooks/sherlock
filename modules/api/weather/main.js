@@ -1,13 +1,4 @@
-"use strict";
-
-let pad = (n) => String(n).length === 1 ? "0" + String(n) : String(n);
-
-let test = (c) => {
-    if (c === undefined || c === null || c === void 0 || c === "")
-        return 0;
-    else
-        return 1;
-};
+let pad = num => String(num).length === 1 ? `0${String(num)}` : String(num);
 
 let icon = (condition, now, phases) => {
     let sunrise, sunset, day;
@@ -15,60 +6,54 @@ let icon = (condition, now, phases) => {
     if (now && phases) {
         sunrise = `${pad(phases.sunrise.hour)}${pad(phases.sunrise.minute)}`;
         sunset = `${pad(phases.sunset.hour)}${pad(phases.sunset.minute)}`;
-        day = now >= sunrise && now <= sunset ? true : false;
+        day = now >= sunrise && now <= sunset;
     } else {
         day = true;
     }
 
     let icons = {
-        "chanceflurries":   "flurries",
-        "chancerain":       "showers_rain",
-        "chancesleat":      "wintry_mix_rain_snow",
-        "chancesnow":       "snow_showers_snow",
-        "chancetstorms":    day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
-        "clear":            day ? "clear_day" : "clear_night",
-        "cloudy":           "cloudy",
-        "flurries":         "flurries",
-        "fog":              "haze_fog_dust_smoke",
-        "hazy":             "haze_fog_dust_smoke",
-        "mostlycloudy":     day ? "mostly_cloudy_day" : "mostly_cloudy_night",
-        "mostlysunny":      "mostly_sunny",
-        "partlycloudy":     day ? "partly_cloudy" : "partly_cloudy_night",
-        "partlysunny":      "partly_sunny",
-        "rain":             "showers_rain",
-        "sleat":            "wintry_mix_rain_snow",
-        "snow":             "snow_showers_snow",
-        "sunny":            "clear_day",
-        "tstorms":          day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
-        "unknown":          "unknown"
+        "chanceflurries": "flurries",
+        "chancerain": "showers_rain",
+        "chancesleat": "wintry_mix_rain_snow",
+        "chancesnow": "snow_showers_snow",
+        "chancetstorms": day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
+        "clear": day ? "clear_day" : "clear_night",
+        "cloudy": "cloudy",
+        "flurries": "flurries",
+        "fog": "haze_fog_dust_smoke",
+        "hazy": "haze_fog_dust_smoke",
+        "mostlycloudy": day ? "mostly_cloudy_day" : "mostly_cloudy_night",
+        "mostlysunny": "mostly_sunny",
+        "partlycloudy": day ? "partly_cloudy" : "partly_cloudy_night",
+        "partlysunny": "partly_sunny",
+        "rain": "showers_rain",
+        "sleat": "wintry_mix_rain_snow",
+        "snow": "snow_showers_snow",
+        "sunny": "clear_day",
+        "tstorms": day ? "isolated_scattered_tstorms_day" : "isolated_scattered_tstorms_night",
+        "unknown": "unknown"
     };
 
-    if (condition === undefined || condition === null || condition === void 0 || condition === "")
-        return icons.unknown;
+    if (!condition || condition === "") return icons.unknown;
 
     return icons[condition] ? icons[condition] : icons.unknown;
 };
 
-module.exports = (server, body) => {
+module.exports = server => {
     let res = server.res;
-    let _ = server.modules._;
-    let fs = server.modules.fs;
-    let path = server.modules.path;
-    let moment = server.modules.moment;
+    let { fs, path, moment } = server.modules;
 
-    fs.readFile(path.join(server.storage, "weather.json"), (error, body) => {
+    return fs.readFile(path.join(server.storage, "weather.json"), (error, body) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-            return error;
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         let data = JSON.parse(body).data;
 
         if (!data.current_observation) {
             console.error("Missing Data");
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-            return;
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase);
@@ -90,29 +75,29 @@ module.exports = (server, body) => {
                 icon: icon_code,
                 image: `https://api.kurisubrooks.com/static/weather/icons/${icon_code}_dark.png`,
                 condition: data.current_observation.weather,
-                temperature: Number(data.current_observation.temp_c),
-                feels_like: Number(data.current_observation.feelslike_c),
+                temperature: Math.round(Number(data.current_observation.temp_c)),
+                feels_like: Math.round(Number(data.current_observation.feelslike_c)),
                 dewpoint: Number(data.current_observation.dewpoint_c),
                 humidity: data.current_observation.relative_humidity,
-                pressure: data.current_observation.pressure_mb + " mBar",
-                visibility: data.current_observation.visibility_km + " km",
+                pressure: `${data.current_observation.pressure_mb} mBar`,
+                visibility: `${data.current_observation.visibility_km} km`,
                 UV: Number(data.current_observation.UV),
                 wind: {
                     chill: data.current_observation.windchill_c,
                     direction: data.current_observation.wind_dir,
                     degrees: Number(data.current_observation.wind_degrees),
-                    gust: data.current_observation.wind_gust_kph + " km/h",
-                    kph: data.current_observation.wind_kph + " km/h"
+                    gust: `${data.current_observation.wind_gust_kph} km/h`,
+                    kph: `${data.current_observation.wind_kph} km/h`
                 },
                 precipitation: {
-                    hour: data.current_observation.precip_1hr_metric + " mm",
-                    today: data.current_observation.precip_today_metric + " mm"
+                    hour: `${data.current_observation.precip_1hr_metric} mm`,
+                    today: `${data.current_observation.precip_today_metric} mm`
                 }
             },
             forecast: []
         };
 
-        _.each(data.forecast.simpleforecast.forecastday, (object) => {
+        for (let object of data.forecast.simpleforecast.forecastday) {
             result.forecast.push({
                 date: {
                     day: object.date.day,
@@ -131,21 +116,21 @@ module.exports = (server, body) => {
                 icon: icon(object.icon),
                 image: `https://api.kurisubrooks.com/static/weather/icons/${icon(object.icon)}_dark.png`,
                 condition: object.conditions,
-                high: Number(object.high.celsius),
-                low: Number(object.low.celsius),
-                humidity: object.avehumidity + "%",
-                rain_chance: object.pop + "%",
-                rainfall: object.qpf_allday.mm + " mm",
-                snowfall: object.snow_allday.cm + " cm",
+                high: Math.round(Number(object.high.celsius)),
+                low: Math.round(Number(object.low.celsius)),
+                humidity: `${object.avehumidity}%`,
+                rain_chance: `${object.pop}%`,
+                rainfall: `${object.qpf_allday.mm} mm`,
+                snowfall: `${object.snow_allday.cm} cm`,
                 wind: {
-                    max: object.maxwind.kph + " km/h",
-                    average: object.avewind.kph + " km/h",
+                    max: `${object.maxwind.kph} km/h`,
+                    average: `${object.avewind.kph} km/h`,
                     direction: object.avewind.dir,
                     degrees: Number(object.avewind.degrees)
                 }
             });
-        });
+        }
 
-        res.send(result);
+        return res.send(result);
     });
 };
