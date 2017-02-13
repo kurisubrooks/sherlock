@@ -6,11 +6,12 @@ module.exports = (server, data) => {
     let res = server.res;
     let { fs, path, request } = server.modules;
 
-    let frames = data.frames ? Number(data.frames) : 8;
     let list = {
         adelaide: { id: "064", type: "radar", tz: "Australia/Adelaide" },
         sydney: { id: "071", type: "radarz", tz: "Australia/Sydney" }
     };
+
+    let frames = data.frames ? Number(data.frames) : 8;
     let types = ["animated", "static"];
     let type = data.type ? data.type : "static";
     let place = data.id ? list[data.id] : list.sydney;
