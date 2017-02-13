@@ -1,8 +1,7 @@
 const keys = require("./keychain.json");
 
 module.exports = {
-    http: 80,
-    https: 443,
+    debug: true,
     api: {
         aqi: { description: "AQI Endpoint" },
         fire: { description: "Fires in/around Penrith" },

@@ -109,13 +109,13 @@ io.on("connection", socket => {
 // web server
 app.all("*", (req, res, next) => {
     let ip = req.ip.replace("::ffff:", "");
-    let data = Object.keys(req.body).size ? req.body : req.query;
+    let data = req.method === "POST" ? req.body : req.query;
     let log = `${ip} ${req.params[0]} ${data ? JSON.stringify(data) : ""}`;
 
     // Handle HTTPS Redirect
-    if (req.secure) {
+    if (req.secure) res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+    if (req.secure || config.debug) {
         // Set Headers
-        res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
         res.set("Access-Control-Allow-Origin", "*");
 
         // Log HTTP Request
@@ -129,7 +129,7 @@ app.all("*", (req, res, next) => {
 });
 
 app.all("/api/:path", (req, res) => {
-    let data = Object.keys(req.body).size ? req.body : req.query;
+    let data = req.method === "POST" ? req.body : req.query;
 
     if (req.params) {
         let type;
