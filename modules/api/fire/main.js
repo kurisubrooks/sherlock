@@ -86,7 +86,7 @@ module.exports = (server, args) => {
             final.type = formatted.TYPE;
             final.category = properties.category;
             final.location = formatted.LOCATION;
-            final.sendStatus = formatted.sendStatus;
+            final.status = formatted.STATUS;
             final.size = Number(formatted.SIZE.replace(" ha", ""));
             final.updated = { };
             final.updated.unix = Date.parse(formatted.UPDATED);
