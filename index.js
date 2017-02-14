@@ -41,9 +41,9 @@ let error = (res, err) => {
 
 let get = val => {
     request(val.url, (err, res, body) => {
-        if (err || res.statusCode !== 200) {
+        if (err || res.sendStatusCode !== 200) {
             console.error(`Unable to GET ${val.name}.${val.format}, retrying in ${val.interval} minutes`);
-            return console.error(err || res.statusCode);
+            return console.error(err || res.sendStatusCode);
         }
 
         if (!body || body === undefined || body === null || body === "" || body === "{}" || body === {}) {
@@ -76,7 +76,7 @@ let run = (req, res, type, endpoint, data) => {
         }, data);
     } catch(error) {
         console.error(error);
-        return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+        return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
     }
 };
 
@@ -172,11 +172,11 @@ app.all("/api*", (req, res) => res.send({ ok: false, error: "missing endpoint" }
 // err handling
 app.use((err, req, res) => {
     console.error(err.stack);
-    return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+    return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
 });
 
 // 404
-app.use((req, res) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
+app.use((req, res) => res.sendStatus(404).send({ ok: false, code: 404, error: "Not Found" }));
 
 // start server
 http.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));

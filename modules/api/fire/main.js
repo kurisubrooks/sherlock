@@ -53,7 +53,7 @@ module.exports = (server, args) => {
     return fs.readFile(path.join(server.storage, "fire.json"), (error, body) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
             return error;
         }
 
@@ -86,7 +86,7 @@ module.exports = (server, args) => {
             final.type = formatted.TYPE;
             final.category = properties.category;
             final.location = formatted.LOCATION;
-            final.status = formatted.STATUS;
+            final.sendStatus = formatted.sendStatus;
             final.size = Number(formatted.SIZE.replace(" ha", ""));
             final.updated = { };
             final.updated.unix = Date.parse(formatted.UPDATED);
