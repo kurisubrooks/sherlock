@@ -18,19 +18,19 @@ module.exports = (server, data) => {
 
     if (data.frames) {
         if (data.frames > 18) {
-            return res.status(400).send({ ok: false, code: 400, error: "maximum of 18 frames allowed" });
+            return res.sendStatus(400).send({ ok: false, code: 400, error: "maximum of 18 frames allowed" });
         }
     }
 
     if (data.type) {
         if (!types[types.indexOf(data.type)]) {
-            return res.status(400).send({ ok: false, code: 400, error: "unknown image type" });
+            return res.sendStatus(400).send({ ok: false, code: 400, error: "unknown image type" });
         }
     }
 
     if (data.id) {
         if (!place) {
-            return res.status(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
+            return res.sendStatus(400).send({ ok: false, code: 400, error: "unknown/unsupported location" });
         }
     }
 
@@ -126,7 +126,7 @@ module.exports = (server, data) => {
                 return res.send(canvas.toBuffer());
             });
         } else {
-            return res.status(400).send({ ok: false, code: 400, error: "unknown type" });
+            return res.sendStatus(400).send({ ok: false, code: 400, error: "unknown type" });
         }
     });
 };

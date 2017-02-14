@@ -65,10 +65,10 @@ module.exports = (server, body) => {
     return request.get(fetch, (error, response, result) => {
         if (error) {
             console.error(error);
-            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         } else if (response.statusCode !== 200) {
             console.error(response.statusCode);
-            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         try {
@@ -87,7 +87,7 @@ module.exports = (server, body) => {
             });
         } catch(err) {
             console.error(err);
-            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
     });
 };
