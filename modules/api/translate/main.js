@@ -66,8 +66,8 @@ module.exports = (server, body) => {
         if (error) {
             console.error(error);
             return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-        } else if (response.sendStatusCode !== 200) {
-            console.error(response.sendStatusCode);
+        } else if (response.statusCode !== 200) {
+            console.error(response.statusCode);
             return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 

@@ -13,7 +13,7 @@ module.exports = (server, args) => {
         if (error) {
             console.error(error);
             return res.sendStatus(503).send({ ok: false, code: 503, error: "Service Unavailable" });
-        } else if (response.sendStatusCode !== 200) {
+        } else if (response.statusCode !== 200) {
             console.error(error);
             return res.sendStatus(503).send({ ok: false, code: 503, error: "Service Unavailable" });
         }
