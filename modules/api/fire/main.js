@@ -99,18 +99,24 @@ module.exports = (server, args) => {
 
         // Each filter
         for (let filterFeature of filter.features) {
-            let geometry = filterFeature.geometry;
-            let filter = geometry.type === "Point" ? turf.circle(geometry, geometry.properties.radius) : geometry;
+            try {
+                let geometry = filterFeature.geometry;
+                let filter = geometry.type === "Point" ? turf.circle(geometry, geometry.properties.radius) : geometry;
 
-            // Each incident
-            for (let feature of incidents.features) {
-                let geometry = feature.geometry;
+                // Each incident
+                for (let feature of incidents.features) {
+                    let geometry = feature.geometry;
 
-                // filter results to overlapping regions
-                let result = turf.intersect(filter, geometry.type === "Point" ? turf.circle(geometry, radius) : geometry.geometries[1].geometries[0]);
+                    // filter results to overlapping regions
+                    let result = turf.intersect(filter, geometry.type === "Point" ? turf.circle(geometry, radius) : geometry.geometries[1].geometries[0]);
 
-                // if match
-                if (result !== undefined) format(feature);
+                    // if match
+                    if (result !== undefined) format(feature);
+                }
+            } catch(error) {
+                res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+                console.error(error);
+                break;
             }
         }
 
