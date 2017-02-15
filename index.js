@@ -169,15 +169,14 @@ app.all("/api/:path", (req, res) => {
 
 app.all("/api*", (req, res) => res.send({ ok: false, error: "missing endpoint" }));
 
-// err handling
-app.use((err, req, res) => {
-    console.error(err.stack);
-    return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
-});
-
 // 404
 app.use((req, res) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
 
-// start server
+// Error Parsing
+process.on("uncaughtException", err => {
+    console.error(err);
+});
+
+// Start
 http.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));
 https.listen(443, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 443`)));
