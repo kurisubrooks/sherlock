@@ -46,17 +46,15 @@ let get = val => {
             return console.error(err || res.statusCode);
         }
 
-        if (!body || body === undefined || body === null || body === "" || body === "{}" || body === {}) {
+        if (!body || body === "" || body === "{}" || body === {}) {
             console.info(`Result from ${val.name} was undefined`);
             return console.info(body);
         }
 
-        if (val.format === "json") body = JSON.parse(body);
-
         return fs.writeFile(path.join(dataStore, `${val.name}.${val.format}`), JSON.stringify({
             ok: true,
             updated: moment().unix(),
-            data: body
+            data: val.format === "json" ? JSON.parse(body) : body
         }, null, 4), (err) => {
             if (err) {
                 console.error(chalk.red(`Unable to save ${val.name}.${val.format}`));
