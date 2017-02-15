@@ -14,7 +14,7 @@ module.exports = (server, data) => {
     try {
         data = JSON.parse(Buffer.from(data.data, "base64").toString());
     } catch(err) {
-        return res.sendStatus(400).send({ ok: false, code: 400, error: "malformed data" });
+        return res.status(400).send({ ok: false, code: 400, error: "malformed data" });
     }
 
     let location = data.l;

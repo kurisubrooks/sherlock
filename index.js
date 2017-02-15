@@ -76,7 +76,7 @@ let run = (req, res, type, endpoint, data) => {
         }, data);
     } catch(error) {
         console.error(error);
-        return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+        return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
     }
 };
 
@@ -172,11 +172,11 @@ app.all("/api*", (req, res) => res.send({ ok: false, error: "missing endpoint" }
 // err handling
 app.use((err, req, res) => {
     console.error(err.stack);
-    return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+    return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
 });
 
 // 404
-app.use((req, res) => res.sendStatus(404).send({ ok: false, code: 404, error: "Not Found" }));
+app.use((req, res) => res.status(404).send({ ok: false, code: 404, error: "Not Found" }));
 
 // start server
 http.listen(80, console.log(chalk.green(`Server Started on`), chalk.yellow(`Port 80`)));

@@ -46,14 +46,14 @@ module.exports = server => {
     return fs.readFile(path.join(server.storage, "weather.json"), (error, body) => {
         if (error) {
             console.error(error);
-            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         let data = JSON.parse(body).data;
 
         if (!data.current_observation) {
             console.error("Missing Data");
-            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         let icon_code = icon(data.current_observation.icon, moment.unix(data.current_observation.local_epoch).format("HHMM"), data.sun_phase);

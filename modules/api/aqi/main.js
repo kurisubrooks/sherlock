@@ -12,10 +12,10 @@ module.exports = (server, args) => {
     request.get(fetch, (error, response, body) => {
         if (error) {
             console.error(error);
-            return res.sendStatus(503).send({ ok: false, code: 503, error: "Service Unavailable" });
+            return res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
         } else if (response.statusCode !== 200) {
             console.error(error);
-            return res.sendStatus(503).send({ ok: false, code: 503, error: "Service Unavailable" });
+            return res.status(503).send({ ok: false, code: 503, error: "Service Unavailable" });
         }
 
         let init, sauce;
@@ -25,7 +25,7 @@ module.exports = (server, args) => {
             sauce = init.rxs.obs[0].msg;
         } catch(err) {
             console.error(err);
-            return res.sendStatus(500).send({ ok: false, code: 500, error: "Internal Server Error" });
+            return res.status(500).send({ ok: false, code: 500, error: "Internal Server Error" });
         }
 
         if (sauce) {
@@ -81,7 +81,7 @@ module.exports = (server, args) => {
                 }
             });
         } else {
-            return res.sendStatus(504).send({ ok: false, code: 503, error: "Service Unavailable" });
+            return res.status(504).send({ ok: false, code: 503, error: "Service Unavailable" });
         }
     });
 };
