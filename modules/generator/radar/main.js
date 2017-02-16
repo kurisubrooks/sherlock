@@ -3,18 +3,18 @@ const Canvas = require("canvas");
 const qs = require("qs");
 
 module.exports = (server, data) => {
-    let res = server.res;
-    let { fs, path, request } = server.modules;
+    const res = server.res;
+    const { fs, path, request } = server.modules;
 
-    let list = {
+    const list = {
         adelaide: { id: "064", type: "radar", tz: "Australia/Adelaide" },
         sydney: { id: "071", type: "radarz", tz: "Australia/Sydney" }
     };
 
     let frames = data.frames ? Number(data.frames) : 8;
-    let types = ["animated", "static"];
-    let type = data.type ? data.type : "static";
-    let place = data.id ? list[data.id] : list.sydney;
+    const types = ["animated", "static"];
+    const type = data.type ? data.type : "static";
+    const place = data.id ? list[data.id] : list.sydney;
 
     if (data.frames) {
         if (data.frames > 18) {
@@ -38,7 +38,7 @@ module.exports = (server, data) => {
         frames = 1;
     }
 
-    let options = qs.stringify({
+    const options = qs.stringify({
         "lt": "radar",
         "lc": place.id,
         "type": "radar",
@@ -52,7 +52,7 @@ module.exports = (server, data) => {
         "tz": place.tz
     }, { indices: false });
 
-    let url = `http://data.weatherzone.com.au/json/animator/?${options}`;
+    const url = `http://data.weatherzone.com.au/json/animator/?${options}`;
 
     return request.get({ url: url, json: true }, (err, response, data) => {
         if (err) throw err;
@@ -80,14 +80,14 @@ module.exports = (server, data) => {
 
             data.frames.sort((a, b) => a - b);
 
-            for (let i of data.frames) {
-                let id = ++count;
+            for (const item of data.frames) {
+                const id = ++count;
 
                 requestQueue.push(new Promise(resolve => {
-                    request.get({ url: i.image, encoding: null }, (err, res, body) => {
+                    request.get({ url: item.image, encoding: null }, (err, res, body) => {
                         if (err) throw err;
 
-                        frames[id] = { radar: body, id: id, i: i };
+                        frames[id] = { radar: body, id: id, item: item };
 
                         return resolve();
                     });
@@ -95,13 +95,14 @@ module.exports = (server, data) => {
             }
 
             return Promise.all(requestQueue).then(() => {
-                for (let thisFrame of frames) {
+                for (const thisFrame of Object.values(frames)) {
                     frame.src = thisFrame.radar;
 
                     ctx.drawImage(terrain, 0, 0);
                     ctx.drawImage(frame, 0, 0);
                     ctx.drawImage(locations, 0, 0);
                     ctx.font = "16px sans-serif";
+                    ctx.fillStyle = "#FFFFFF";
                     ctx.fillText(thisFrame.id, 628, 15);
 
                     if (thisFrame.id === count) encoder.setDelay(2250);
