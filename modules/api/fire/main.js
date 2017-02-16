@@ -5,13 +5,13 @@ let alertLevels = [
     "Emergency Warning"
 ];
 
-let alertType = [
+let alertType = [ // eslint-disable-line no-unused-vars
     "Out of control",
     "Being controlled",
     "Under control"
 ];
 
-let fireType = [
+let fireType = [ // eslint-disable-line no-unused-vars
     "Bush Fire",
     "Grass Fire",
     "Hazard Reduction",
@@ -69,11 +69,11 @@ module.exports = (server, args) => {
             let final = { };
 
             // Split Original String into Parsable Object
-            for (let i of description) {
-                description[i] = i.split(/:(.+)?/);
-                description[i].splice(2, 1);
-                description[i][1] = description[i][1].trim();
-                formatted[description[i][0]] = description[i][1];
+            for (let item of description) {
+                description[item] = item.split(/:(.+)?/);
+                description[item].splice(2, 1);
+                description[item][1] = description[item][1].trim();
+                formatted[description[item][0]] = description[item][1];
             }
 
             // if Level "Not Applicable" && Matches Blacklist, Remove

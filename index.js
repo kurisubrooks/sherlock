@@ -32,7 +32,7 @@ app.use(express.static("public"));
 app.use("/static", express.static("static"));
 
 // helper functions
-let token = count =>
+let token = count => // eslint-disable-line no-unused-vars
     crypto.randomBytes(Math.ceil(count / 2)).toString("hex").slice(0, count);
 
 let error = (res, err) => {
